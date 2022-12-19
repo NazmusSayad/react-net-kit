@@ -1,0 +1,40 @@
+{
+  "name": "use-react-api",
+  "version": "1.0.0",
+  "main": "./dist-cjs/index.js",
+  "scripts": {
+    "dev": "npm-ez dev",
+    "build": "npm-ez build"
+  },
+  "author": "NazmusSayad",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "latest",
+    "@types/react": "latest",
+    "npm-ez": "latest",
+    "typescript": "latest"
+  },
+  "peerDependencies": {
+    "axios": "*",
+    "react": "*"
+  },
+  "type": "commonjs",
+  "types": "./dist-cjs/index.d.ts",
+  "module": "./dist-mjs/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist-cjs/index.js",
+      "import": "./dist-mjs/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NazmusSayad/use-react-api.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/NazmusSayad/use-react-api/issues"
+  },
+  "homepage": "https://github.com/NazmusSayad/use-react-api#readme",
+  "description": ""
+}

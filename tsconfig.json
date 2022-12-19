@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "declaration": true,
+    "inlineSourceMap": false,
+    "strict": true,
+    "pretty": true,
+    "removeComments": true
+  },
+  "include": ["src"]
+}
