@@ -28,13 +28,9 @@ const useApiCore = (
       setStatus.loading()
       const [err, data, ok] = await wrappedFn(...args)
 
-      if (ok && apiCoreConfig.useDataStatus) {
-        setStatus.data(data)
-      } else if (!ok) {
-        setStatus.error(err)
-      } else {
-        setStatus.reset()
-      }
+      if (ok) {
+        apiCoreConfig.useDataStatus ? setStatus.data(data) : setStatus.reset()
+      } else setStatus.error(err)
 
       return data
     }
