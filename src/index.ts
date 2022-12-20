@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo } from 'react'
 import axios, { CreateAxiosDefaults } from 'axios'
-import axiosWrapper from './wrapper'
-import { WrapperOptions } from './wrapper'
-import { AxiosMethodsKeys } from './config'
+import { AxiosMethodsKeys, AxiosMethods } from './config'
+import axiosWrapper, { WrapperOptions } from './wrapper'
+import { StatusProps, StatusMethods } from './useStatus'
 import useApiCore from './useApiCore'
+import useApiOnceCore, { UseApiOnceParams } from './useApiOnceCore'
 
 const ReactApi = (
   axiosConfig?: CreateAxiosDefaults,
@@ -17,37 +17,20 @@ const ReactApi = (
     methods: coreMethods,
 
     useApi() {
-      return useApiCore(coreMethods, { keepData: false })
+      return useApiCore(coreMethods)
     },
 
-    useApiOnce(method: AxiosMethodsKeys, ...args: any[]) {
-      const api = useApiCore(coreMethods, {
-        keepData: true,
-        startAsLoading: true,
-      })
-
-      const runApi = useCallback(() => {
-        const onLoad: (data: any) => void =
-          args[args.length - 1] instanceof Function && args.pop()
-
-        // @ts-ignore
-        const axiosFn = api.methods[method.toLowerCase()]
-
-        // @ts-ignore
-        axiosFn(...args).then(onLoad)
-      }, [method, ...args])
-
-      useEffect(runApi, [])
-
-      return useMemo(() => {
-        return {
-          ...api.status,
-          setStatus: api.setStatus,
-          retry: runApi,
-        }
-      }, [api.status])
+    useApiOnce(method: AxiosMethodsKeys, ...args: UseApiOnceParams) {
+      return useApiOnceCore(coreMethods, method, ...args)
     },
   }
 }
 
+export {
+  UseApiOnceParams,
+  WrapperOptions as ReactApiOptions,
+  AxiosMethods,
+  StatusProps,
+  StatusMethods,
+}
 export default ReactApi

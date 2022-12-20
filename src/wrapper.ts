@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
 import { AxiosMethods, axiosMethods } from './config'
 import { runSyncAsync } from './utils'
 
@@ -11,22 +11,22 @@ const defaultGetFail = (err: any): String | String[] => {
 }
 
 const defaultWrapperOptions = {
+  _getSuccess: undefined,
   getSuccess: defaultGetSuccess,
-  successMiddleware: undefined,
+  _getFail: undefined,
   getFail: defaultGetFail,
-  failMiddleware: undefined,
 }
 
 export type WrapperOptions = {
-  getSuccess?: (response: any) => any
-  successMiddleware?: (response: any) => any
-  getFail?: (err: any) => any
-  failMiddleware?: (err: any) => any
+  getSuccess?: (response: AxiosResponse) => any
+  _getSuccess?: (response: AxiosResponse) => any
+  getFail?: (err: AxiosError) => void
+  _getFail?: (err: AxiosError) => void
 }
 
-export default (
+const wrapper = (
   axios: AxiosInstance,
-  config?: WrapperOptions
+  config: WrapperOptions = {}
 ): AxiosMethods => {
   const conf = { ...defaultWrapperOptions, ...config }
 
@@ -35,15 +35,16 @@ export default (
     async (...args: any[]) => {
       try {
         const response = await axiosMethod(...args)
-        await runSyncAsync(conf.successMiddleware, response)
+        await runSyncAsync(conf._getSuccess, response)
         return [undefined, await runSyncAsync(conf.getSuccess, response)]
       } catch (err) {
-        await runSyncAsync(conf.failMiddleware, err)
+        await runSyncAsync(conf._getFail, err)
         return [await runSyncAsync(conf.getFail, err), undefined]
       }
     }
 
-  const wrappedMethods: any = { axios: wrap(axios) }
+  // @ts-ignore
+  const wrappedMethods: AxiosMethods = { default: wrap(axios) }
 
   for (let key in axios) {
     if (!axiosMethods.includes(key)) continue
@@ -53,3 +54,5 @@ export default (
 
   return wrappedMethods
 }
+
+export default wrapper

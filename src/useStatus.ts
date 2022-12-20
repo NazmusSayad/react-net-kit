@@ -1,78 +1,77 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import { isSame } from './utils'
 
-const defaultInitialStatus = {
-  loading: false,
-  data: undefined,
-  error: undefined,
-}
-
-const isSame = (a: any, b: any): boolean => {
-  return a === b || JSON.stringify(a) === JSON.stringify(b)
-}
-
-type StatusProps = {
+export type StatusProps = {
   loading: boolean
-  data: any
   error: any
+  data: any
 }
 
-type StatusMethods = {
+export type StatusMethods = {
   loading: (isLoading?: boolean) => void
   data: (data: any) => void
   error: (error: any) => void
   reset: () => void
 }
 
+const initialStatus: StatusProps = {
+  loading: false,
+  data: undefined,
+  error: undefined,
+}
+
 const useStatus = (startAsLoading = false): [StatusProps, StatusMethods] => {
-  const [status, setStatus] = useState(() => {
-    return { ...defaultInitialStatus, loading: startAsLoading }
-  })
+  const [status, setStatus] = useState(() => ({
+    ...initialStatus,
+    loading: startAsLoading,
+  }))
 
   // @ts-ignore
-  const [statusRef]: [typeof status] = useState({})
-  Object.assign(statusRef, status)
+  const statusRef: { current: typeof status } = useRef({})
+  Object.assign(statusRef.current, status)
 
-  const setStatusModified = useMemo(
+  const statusMethods = useMemo(
     () => ({
       loading(loading = true) {
-        if (isSame(statusRef.loading, loading)) return
+        if (isSame(statusRef.current.loading, loading)) return
 
         setStatus({
-          ...defaultInitialStatus,
+          ...initialStatus,
           loading,
         })
       },
 
       data(data: any) {
-        if (isSame(statusRef.data, data)) return
+        if (isSame(statusRef.current.data, data)) return
 
         setStatus({
-          ...defaultInitialStatus,
+          ...initialStatus,
           data,
         })
       },
 
       error(error: any) {
-        if (isSame(statusRef.error, error)) return
+        if (isSame(statusRef.current.error, error)) return
 
         setStatus({
-          ...defaultInitialStatus,
+          ...initialStatus,
           error,
         })
       },
 
       reset() {
-        if (isSame(statusRef, defaultInitialStatus)) return
+        if (isSame(statusRef.current, initialStatus)) return
 
         setStatus({
-          ...defaultInitialStatus,
+          ...initialStatus,
         })
       },
     }),
     []
   )
 
-  return useMemo(() => [status, setStatusModified], [status])
+  return useMemo(() => [status, statusMethods], [status])
 }
 
+export type UseStatusConfig = Parameters<typeof useStatus>[0]
 export default useStatus

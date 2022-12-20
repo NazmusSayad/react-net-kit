@@ -12,7 +12,7 @@ export const axiosMethods = [
 ]
 
 export type AxiosMethodsKeys =
-  | 'axios'
+  | 'default'
   | 'request'
   | 'get'
   | 'delete'
@@ -23,7 +23,7 @@ export type AxiosMethodsKeys =
   | 'patch'
 
 export type AxiosMethods = {
-  axios: typeof axios.options
+  default: typeof axios.options
   request: typeof axios.request
   get: typeof axios.get
   delete: typeof axios.delete

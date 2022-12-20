@@ -1,22 +1,26 @@
 import { useMemo } from 'react'
-import useStatus from './useStatus'
 import { AxiosMethods } from './config'
+import useStatus from './useStatus'
+
+type ApiCoreConfigRequired = {
+  startAsLoading: boolean
+  useDataStatus: boolean
+}
+
+export type ApiCoreConfig = Partial<ApiCoreConfigRequired>
 
 const useApiCore = (
   coreMethods: AxiosMethods,
-  apiHookConfig: {
-    keepData?: boolean
-    startAsLoading?: boolean
-  }
+  apiCoreConfig: ApiCoreConfig = {}
 ) => {
-  const [status, setStatus] = useStatus(apiHookConfig?.startAsLoading)
+  const [status, setStatus] = useStatus(apiCoreConfig.startAsLoading)
 
   const wrapWithHook = (methodFn: Function) => {
     return async (...args: any[]) => {
       setStatus.loading()
       const [err, data] = await methodFn(...args)
 
-      if (data !== undefined) {
+      if (apiCoreConfig.useDataStatus && data !== undefined) {
         setStatus.data(data)
       } else if (err !== undefined) {
         setStatus.error(err)
@@ -38,8 +42,7 @@ const useApiCore = (
   }, [])
 
   return useMemo(() => {
-    apiHookConfig?.keepData || delete status.data
-    return { status, setStatus, methods, ...status, ...methods }
-  }, [status, apiHookConfig?.keepData])
+    return { methods, ...status, ...methods, status, setStatus }
+  }, [status])
 }
 export default useApiCore
