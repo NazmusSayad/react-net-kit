@@ -1,21 +1,11 @@
 import { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
-import { AxiosMethods, axiosMethods } from './config'
-import { runSyncAsync } from './utils'
-
-const defaultGetSuccess = (response: any): any => {
-  return response.status === 204 ? true : response.data?.data || response.data
-}
-
-const defaultGetFail = (err: any): String | String[] => {
-  return err.response?.data?.message || err.message
-}
-
-const defaultWrapperOptions = {
-  _getSuccess: undefined,
-  getSuccess: defaultGetSuccess,
-  _getFail: undefined,
-  getFail: defaultGetFail,
-}
+import { AxiosMethodsCore, AnyAxiosMethodCore, axiosMethods } from './config'
+import {
+  defaultGetFail,
+  defaultGetSuccess,
+  runSyncAsync,
+  UseFunctionParams,
+} from './utils'
 
 export type WrapperOptions = {
   getSuccess?: (response: AxiosResponse) => any
@@ -24,27 +14,42 @@ export type WrapperOptions = {
   _getFail?: (err: AxiosError) => void
 }
 
+type WrappedMethod<Func extends AnyAxiosMethodCore> = UseFunctionParams<
+  Func,
+  Promise<[any, any, boolean]>
+>
+export type WrappedMethods = {
+  [Key in keyof AxiosMethodsCore]: WrappedMethod<AxiosMethodsCore[Key]>
+}
+export type AnyWrappedMethod = WrappedMethods[keyof WrappedMethods]
+
 const wrapper = (
   axios: AxiosInstance,
   config: WrapperOptions = {}
-): AxiosMethods => {
-  const conf = { ...defaultWrapperOptions, ...config }
+): WrappedMethods => {
+  const conf: WrapperOptions = {
+    _getSuccess: undefined,
+    getSuccess: defaultGetSuccess,
+    _getFail: undefined,
+    getFail: defaultGetFail,
+    ...config,
+  }
 
-  const wrap =
-    (axiosMethod: Function) =>
-    async (...args: any[]) => {
+  const wrap = <T extends AnyAxiosMethodCore>(axiosFn: T): WrappedMethod<T> => {
+    return async (...arg: any[]) => {
       try {
-        const response = await axiosMethod(...args)
+        const response = await axiosFn(...(arg as [any]))
         await runSyncAsync(conf._getSuccess, response)
-        return [undefined, await runSyncAsync(conf.getSuccess, response)]
+        return [undefined, await runSyncAsync(conf.getSuccess, response), true]
       } catch (err) {
         await runSyncAsync(conf._getFail, err)
-        return [await runSyncAsync(conf.getFail, err), undefined]
+        return [await runSyncAsync(conf.getFail, err), undefined, false]
       }
     }
+  }
 
   // @ts-ignore
-  const wrappedMethods: AxiosMethods = { default: wrap(axios) }
+  const wrappedMethods: WrappedMethods = {}
 
   for (let key in axios) {
     if (!axiosMethods.includes(key)) continue

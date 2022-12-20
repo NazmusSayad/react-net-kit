@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { AxiosMethods } from './config'
+import { AnyWrappedMethod, WrappedMethods } from './wrapper'
 import useStatus from './useStatus'
+import { UseFunctionParams } from './utils'
 
 type ApiCoreConfigRequired = {
   startAsLoading: boolean
@@ -8,21 +9,28 @@ type ApiCoreConfigRequired = {
 }
 
 export type ApiCoreConfig = Partial<ApiCoreConfigRequired>
+type HookWrappedMethod<Func extends AnyWrappedMethod> = UseFunctionParams<
+  Func,
+  Promise<any>
+>
+export type HookWrappedMethods = {
+  [Key in keyof WrappedMethods]: HookWrappedMethod<WrappedMethods[Key]>
+}
 
 const useApiCore = (
-  coreMethods: AxiosMethods,
+  coreMethods: WrappedMethods,
   apiCoreConfig: ApiCoreConfig = {}
 ) => {
   const [status, setStatus] = useStatus(apiCoreConfig.startAsLoading)
 
-  const wrapWithHook = (methodFn: Function) => {
+  const wrapWithHook = (wrappedFn: AnyWrappedMethod) => {
     return async (...args: any[]) => {
       setStatus.loading()
-      const [err, data] = await methodFn(...args)
+      const [err, data, ok] = await wrappedFn(...args)
 
-      if (apiCoreConfig.useDataStatus && data !== undefined) {
+      if (ok && apiCoreConfig.useDataStatus) {
         setStatus.data(data)
-      } else if (err !== undefined) {
+      } else if (!ok) {
         setStatus.error(err)
       } else {
         setStatus.reset()
@@ -32,7 +40,7 @@ const useApiCore = (
     }
   }
 
-  const methods: AxiosMethods = useMemo(() => {
+  const methods: HookWrappedMethods = useMemo(() => {
     const wrapped: any = {}
     for (let key in coreMethods) {
       // @ts-ignore

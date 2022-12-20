@@ -12,7 +12,6 @@ export const axiosMethods = [
 ]
 
 export type AxiosMethodsKeys =
-  | 'default'
   | 'request'
   | 'get'
   | 'delete'
@@ -22,14 +21,10 @@ export type AxiosMethodsKeys =
   | 'put'
   | 'patch'
 
-export type AxiosMethods = {
-  default: typeof axios.options
-  request: typeof axios.request
-  get: typeof axios.get
-  delete: typeof axios.delete
-  head: typeof axios.head
-  options: typeof axios.options
-  post: typeof axios.post
-  put: typeof axios.put
-  patch: typeof axios.patch
+export type AxiosMethodsCore = {
+  [Key in keyof Record<AxiosMethodsKeys, any>]: typeof axios[Key]
 }
+
+export type AxiosMethodsCoreParams = Parameters<AnyAxiosMethodCore>
+
+export type AnyAxiosMethodCore = AxiosMethodsCore[keyof AxiosMethodsCore]

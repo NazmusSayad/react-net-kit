@@ -1,8 +1,8 @@
 import axios, { CreateAxiosDefaults } from 'axios'
-import { AxiosMethodsKeys, AxiosMethods } from './config'
-import axiosWrapper, { WrapperOptions } from './wrapper'
+import { AxiosMethodsKeys } from './config'
+import axiosWrapper, { WrapperOptions, WrappedMethods } from './wrapper'
 import { StatusProps, StatusMethods } from './useStatus'
-import useApiCore from './useApiCore'
+import useApiCore, { HookWrappedMethods } from './useApiCore'
 import useApiOnceCore, { UseApiOnceParams } from './useApiOnceCore'
 
 const ReactApi = (
@@ -27,10 +27,11 @@ const ReactApi = (
 }
 
 export {
-  UseApiOnceParams,
   WrapperOptions as ReactApiOptions,
-  AxiosMethods,
+  WrappedMethods,
+  HookWrappedMethods,
   StatusProps,
   StatusMethods,
+  UseApiOnceParams,
 }
 export default ReactApi
