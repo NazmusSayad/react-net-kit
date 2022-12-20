@@ -1,37 +1,17 @@
-import axios, { CreateAxiosDefaults } from 'axios'
-import { AxiosMethodsKeys } from './config'
-import axiosWrapper, { WrapperOptions, WrappedMethods } from './wrapper'
-import { StatusProps, StatusMethods } from './useStatus'
-import useApiCore, { HookWrappedMethods } from './useApiCore'
-import useApiOnceCore, { UseApiOnceParams } from './useApiOnceCore'
+export { default } from './ReactApi.js'
 
-const ReactApi = (
-  axiosConfig?: CreateAxiosDefaults,
-  apiConfig?: WrapperOptions
-) => {
-  const instance = axios.create(axiosConfig)
-  const coreMethods = axiosWrapper(instance, apiConfig)
+export { AxiosMethodsKeys } from './config.js'
 
-  return {
-    instance,
-    methods: coreMethods,
-
-    useApi() {
-      return useApiCore(coreMethods)
-    },
-
-    useApiOnce(method: AxiosMethodsKeys, ...args: UseApiOnceParams) {
-      return useApiOnceCore(coreMethods, method, ...args)
-    },
-  }
-}
-
+export { UseApiOnceParams } from './hooks/useApiOnceCore.js'
 export {
-  WrapperOptions as ReactApiOptions,
-  WrappedMethods,
-  HookWrappedMethods,
-  StatusProps,
   StatusMethods,
-  UseApiOnceParams,
-}
-export default ReactApi
+  StatusProps,
+  UseStatusConfig,
+} from './hooks/useStatus.js'
+
+export { CreateHookConfig, HookMethods } from './creator/createHook.js'
+export {
+  AnyRootMethod,
+  CreateRootConfig,
+  RootMethods,
+} from './creator/createRoot.js'

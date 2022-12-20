@@ -13,11 +13,3 @@ export const isSame = (a: any, b: any): boolean => {
 export type UseFunctionParams<F extends (...args: any[]) => any, R> = (
   ...args: Parameters<F>
 ) => R
-
-export const defaultGetSuccess = (response: any): any => {
-  return response.status === 204 ? true : response.data?.data || response.data
-}
-
-export const defaultGetFail = (err: any): String | String[] => {
-  return err.response?.data?.message || err.message
-}

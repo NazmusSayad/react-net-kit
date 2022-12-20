@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { AxiosRequestConfig } from 'axios'
-import { AxiosMethodsKeys } from './config'
-import useApiCore from './useApiCore'
-import { WrappedMethods } from './wrapper'
+import { AxiosMethodsKeys } from '../config.js'
+import { RootMethods } from '../creator/createRoot.js'
+import useApiCore from './useApiCore.js'
 
 type OnLoadFunction = (data: any) => void
 
@@ -14,20 +14,20 @@ export type UseApiOnceParams = [
 ]
 
 const useApiOnceCore = (
-  coreMethods: WrappedMethods,
+  coreMethods: RootMethods,
   method: AxiosMethodsKeys,
   ...args: UseApiOnceParams
 ) => {
   const api = useApiCore(coreMethods, {
     startAsLoading: true,
-    useDataStatus: true,
+    hook: {
+      useDataStatus: true,
+    },
   })
 
   const runApi = useRef(() => {})
   runApi.current = () => {
-    // @ts-ignore
-    const onLoad: Function =
-      args[args.length - 1] instanceof Function && args.pop()
+    const onLoad: any = args[args.length - 1] instanceof Function && args.pop()
 
     // @ts-ignore
     const axiosFn = api.methods[method.toLowerCase()]

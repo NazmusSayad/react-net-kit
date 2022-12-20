@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react'
-import { isSame } from './utils'
+import { isSame } from '../utils'
 
 export type StatusProps = {
   loading: boolean

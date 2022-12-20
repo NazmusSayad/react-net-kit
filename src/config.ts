@@ -9,17 +9,9 @@ export const axiosMethods = [
   'post',
   'put',
   'patch',
-]
+] as const
 
-export type AxiosMethodsKeys =
-  | 'request'
-  | 'get'
-  | 'delete'
-  | 'head'
-  | 'options'
-  | 'post'
-  | 'put'
-  | 'patch'
+export type AxiosMethodsKeys = typeof axiosMethods[number]
 
 export type AxiosMethodsCore = {
   [Key in keyof Record<AxiosMethodsKeys, any>]: typeof axios[Key]
