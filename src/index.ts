@@ -11,7 +11,7 @@ export {
 
 export { CreateHookConfig, HookMethods } from './creator/createHook.js'
 export {
+  CreateRootConfig as ReactApiConfig,
   AnyRootMethod,
-  CreateRootConfig,
   RootMethods,
 } from './creator/createRoot.js'

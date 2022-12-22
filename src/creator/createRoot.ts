@@ -7,10 +7,10 @@ import {
 import { runSyncAsync, UseFunctionParams } from '../utils.js'
 
 export type CreateRootConfig = {
-  getSuccess?: (response: AxiosResponse) => any
   _getSuccess?: (response: AxiosResponse) => any
-  getFail?: (err: AxiosError) => void
+  getSuccess?: (response: AxiosResponse) => any
   _getFail?: (err: AxiosError) => void
+  getFail?: (err: AxiosError) => void
 }
 
 export type RootMethods = {
@@ -24,10 +24,10 @@ export type AnyRootMethod = RootMethods[keyof RootMethods]
 
 const defaultConfig: CreateRootConfig = {
   getSuccess: (response) => {
-    return response.status === 204 ? true : response.data?.data || response.data
+    return response.data?.data ?? response.data
   },
   getFail: (err: any): String | String[] => {
-    return err.response?.data?.message || err.message
+    return err.response?.data?.message ?? err.message
   },
 }
 

@@ -1,9 +1,9 @@
 {
   "name": "use-react-api",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "./dist-cjs/index.js",
   "scripts": {
-    "dev": "npm-ez dev",
+    "dev": "npm-ez dev --module=mjs",
     "build": "npm-ez build"
   },
   "author": "NazmusSayad",
@@ -11,7 +11,7 @@
   "devDependencies": {
     "@types/axios": "latest",
     "@types/react": "latest",
-    "npm-ez": "latest",
+    "npm-ez": "^1.0.2",
     "typescript": "latest"
   },
   "dependencies": {},
