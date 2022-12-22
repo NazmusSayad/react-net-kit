@@ -24,7 +24,7 @@ export type AnyRootMethod = RootMethods[keyof RootMethods]
 
 const defaultConfig: CreateRootConfig = {
   getSuccess: (response) => {
-    return response.data?.data ?? response.data
+    return response.status === 204 ? true : response.data?.data ?? response.data
   },
   getFail: (err: any): String | String[] => {
     return err.response?.data?.message ?? err.message

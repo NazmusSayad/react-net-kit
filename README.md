@@ -91,7 +91,7 @@ const Component = () => {
 ## Advanced usages of `ReactApi`:
 
 ```js
-ReactApi(AxiosInstanceConfig, ReqctApiConfig)
+ReactApi(AxiosInstanceConfig, ReactApiConfig)
 // { instance, methods, useApiOnce, useApi }
 ```
 
@@ -99,7 +99,7 @@ Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosIn
 
 <br />
 
-## `ReqctApiConfig` options:
+## `ReactApiConfig` options:
 
 ```ts
 {
@@ -128,14 +128,16 @@ ReactApi(
       console.log('Raw response', response)
     },
     getSuccess: (response) => {
-      return response.data?.data ?? response.data
+      return response.status === 204
+        ? true
+        : response.data?.data ?? response.data
     },
 
     _getFail: (err) => {
       console.log('Raw error', err)
     },
     getFail: (err) => {
-      return err.response?.data?.message || err.message
+      return err.response?.data?.message ?? err.message
     },
   }
 )
