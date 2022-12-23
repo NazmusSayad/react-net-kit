@@ -1,22 +1,15 @@
 import { useCallback, useMemo, useRef } from 'react'
-import { AxiosRequestConfig } from 'axios'
-import { AxiosMethodsKeys } from '../config.js'
+import { AxiosMethodsCoreParams, AxiosMethodsKeys } from '../config.js'
 import { RootMethods } from '../creator/createRoot.js'
 import useApiCore from './useApiCore.js'
 
-type OnLoadFunction = (data: any) => void
+export type UseApiOnceOnLoadFn = (data: any) => void
 
-export type UseApiOnceParams = [
-  String | AxiosRequestConfig,
-  (OnLoadFunction | Object | AxiosRequestConfig)?,
-  (OnLoadFunction | AxiosRequestConfig)?,
-  OnLoadFunction?
-]
-
-const useApiOnceCore = (
+export default (
   coreMethods: RootMethods,
   method: AxiosMethodsKeys,
-  axiosArgs: UseApiOnceParams
+  axiosArgs: AxiosMethodsCoreParams,
+  onLoad?: UseApiOnceOnLoadFn
 ) => {
   const api = useApiCore(coreMethods, {
     startAsLoading: true,
@@ -27,9 +20,6 @@ const useApiOnceCore = (
 
   const retryApiRef = useRef<() => Promise<any>>()
   retryApiRef.current = async () => {
-    const onLoad: any =
-      axiosArgs[axiosArgs.length - 1] instanceof Function && axiosArgs.pop()
-
     // @ts-ignore
     const axiosFn = api.methods[method.toLowerCase()]
     const data = await axiosFn(...axiosArgs)
@@ -50,5 +40,3 @@ const useApiOnceCore = (
     [api.status]
   )
 }
-
-export default useApiOnceCore

@@ -1,18 +1,7 @@
 export { default } from './ReactApi.js'
+export { createAnchor } from './hooks/utils.js'
 
-export { AxiosMethodsKeys } from './config.js'
-
-export { createAnchor, CreateAnchor } from './hooks/useSuspenseApi.js'
-export { UseApiOnceParams } from './hooks/useApiOnceCore.js'
-export {
-  StatusMethods,
-  StatusProps,
-  UseStatusConfig,
-} from './hooks/useStatus.js'
-
-export { CreateHookConfig, HookMethods } from './creator/createHook.js'
-export {
-  CreateRootConfig as ReactApiConfig,
-  AnyRootMethod,
-  RootMethods,
-} from './creator/createRoot.js'
+export { StatusMethods, StatusProps } from './hooks/useStatus.js'
+export { AxiosMethodsKeys as AvailableAxiosMethods } from './config.js'
+export { HookMethods as AvailableMethods } from './creator/createHook.js'
+export { CreateRootConfig as ReactApiConfig } from './creator/createRoot.js'
