@@ -3,13 +3,6 @@ import { RootMethods } from '../creator/createRoot'
 import { AxiosMethodsCoreParams, AxiosMethodsKeys } from '../config'
 import { anchorSymbol, CreateAnchor, parseResponseList } from './utils'
 
-export type UseSuspenseApiOnLoadFn = (data: any[]) => void
-
-export type SuspenseApiOnceRequests = [
-  AxiosMethodsKeys,
-  ...AxiosMethodsCoreParams
-][]
-
 export default (
   rootMethods: RootMethods,
   anchor: CreateAnchor,
@@ -49,3 +42,10 @@ export default (
 
   throw anchor.promise
 }
+
+export type UseSuspenseApiOnLoadFn = (data: any[]) => void
+
+export type SuspenseApiOnceRequests = [
+  AxiosMethodsKeys,
+  ...AxiosMethodsCoreParams
+][]

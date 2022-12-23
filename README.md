@@ -10,6 +10,7 @@ This package makes http request in react easier.
 <br/>
 
 ## Features
+
 - `React.Suspense` support!
 - Lightweight
 - Auto and manual request
@@ -105,7 +106,7 @@ const Component = () => {
 
 ```js
 ReactApi(AxiosInstanceConfig, ReactApiConfig)
-// { instance, methods, useApi, useApiOnce, useSuspenseApiOnce }
+// { instance, methods, useApi, useApiOnce, useSuspenseApi }
 ```
 
 Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosInstanceConfig`
@@ -168,7 +169,7 @@ This returns:
 
 ```ts
 {
-  instance, methods, useApi, useApiOnce, useSuspenseApiOnce
+  instance, methods, useApi, useApiOnce, useSuspenseApi
 }
 ```
 
@@ -196,7 +197,7 @@ This is an object:
 All the functions takes axios params,
 check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `[error, data, isOk]`
 
-### `ReactApi().useApi()`:
+### `ReactApi().useApi(config)`:
 
 #### **Usages:**
 
@@ -274,7 +275,7 @@ These axios methods the returned value from `getSuccess` when there is no error 
 
 <br />
 
-### `ReactApi().useApiOnce()`:
+### `ReactApi().useApiOnce(method, ...axios, onLoad)`:
 
 ```js
 import { useApiOnce } from './api.js'
@@ -325,26 +326,26 @@ The returned value looks like:
 
 <br />
 
-### `ReactApi().useSuspenseApiOnce()`:
+### `ReactApi().createSuspenseApi()`:
 
-This uses nearest React.Suspense by default.
+This function returns a hook that uses `React.Suspense`.
+
+**!! Warning !!** -- _Do not use this hook multiple times. Create a new hook for each component_
 
 ```js
-import { createAnchor } from 'use-react-api'
-import { useApiOnce } from './api.js'
-const anchor = createAnchor()
+import { createSuspenseApi } from './api.js'
+const useSuspenseApi = createSuspenseApi()
+const useSuspenseApi2 = createSuspenseApi()
 
 const Component = () => {
   // Basic usages
-  const api = useSuspenseApiOnce(
-    anchor,
+  const api = useSuspenseApi(
     ['get', 'https://www.boredapi.com/api/activity'],
     ['get', 'https://dummyjson.com/products']
   )
 
   // With a function
-  const api = useSuspenseApiOnce(
-    anchor,
+  const api2 = useSuspenseApi2(
     ['get', 'https://www.boredapi.com/api/activity'],
     ['get', 'https://dummyjson.com/products'],
     ([bored, dummy]) => {
@@ -356,10 +357,10 @@ const Component = () => {
 }
 ```
 
-The returned value looks like:
+The returned value of this hook looks like:
 
 ```js
-;[
+api = [
   {
     data: any,
     error: any,

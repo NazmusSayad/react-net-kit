@@ -4,8 +4,6 @@ import { RootMethods } from '../creator/createRoot.js'
 import useEffectOnce from '../heplers/useEffectOnce.js'
 import useApiCore from './useApiCore.js'
 
-export type UseApiOnceOnLoadFn = (data: any) => void
-
 export default (
   coreMethods: RootMethods,
   method: AxiosMethodsKeys,
@@ -44,3 +42,5 @@ export default (
     [api.status]
   )
 }
+
+export type UseApiOnceOnLoadFn = (data: any) => void

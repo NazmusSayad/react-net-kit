@@ -1,19 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { isSame } from '../utils'
 
-export type StatusProps = {
-  loading: boolean
-  error: any
-  data: any
-}
-
-export type StatusMethods = {
-  loading: (isLoading?: boolean) => void
-  data: (data: any) => void
-  error: (error: any) => void
-  reset: () => void
-}
-
 const initialStatus: StatusProps = {
   loading: false,
   data: undefined,
@@ -73,5 +60,19 @@ const useStatus = (startAsLoading = false): [StatusProps, StatusMethods] => {
   return useMemo(() => [status, statusMethods], [status])
 }
 
-export type UseStatusConfig = Parameters<typeof useStatus>[0]
 export default useStatus
+
+export type UseStatusConfig = Parameters<typeof useStatus>[0]
+
+export type StatusProps = {
+  loading: boolean
+  error: any
+  data: any
+}
+
+export type StatusMethods = {
+  loading: (isLoading?: boolean) => void
+  data: (data: any) => void
+  error: (error: any) => void
+  reset: () => void
+}

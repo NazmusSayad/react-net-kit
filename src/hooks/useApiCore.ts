@@ -3,11 +3,6 @@ import useStatus from './useStatus.js'
 import { RootMethods } from '../creator/createRoot.js'
 import createHook, { CreateHookConfig } from '../creator/createHook.js'
 
-export type ApiCoreConfig = {
-  startAsLoading?: boolean
-  hook?: CreateHookConfig
-}
-
 export default (rootMethods: RootMethods, config: ApiCoreConfig = {}) => {
   const [status, setStatus] = useStatus(config.startAsLoading)
 
@@ -16,4 +11,9 @@ export default (rootMethods: RootMethods, config: ApiCoreConfig = {}) => {
   }, [])
 
   return useMemo(() => ({ status, setStatus, methods }), [status])
+}
+
+export type ApiCoreConfig = {
+  startAsLoading?: boolean
+  hook?: CreateHookConfig
 }
