@@ -1,14 +1,12 @@
-export const anchorSymbol = Symbol('useSuspenseApi')
+export const anchorSymbol = Symbol('Symbol')
 
 export type CreateAnchor = {
   symbol: Symbol
-  response?: any
+  [index: string]: any
 }
 
 export const createAnchor = (): CreateAnchor => {
-  return {
-    symbol: anchorSymbol,
-  }
+  return { symbol: anchorSymbol }
 }
 
 export const parseResponseList = (result: [any, any, boolean][]) => {

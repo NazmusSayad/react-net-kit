@@ -174,10 +174,19 @@ node-ls-files@^0.0.3:
   resolved "https://registry.yarnpkg.com/node-ls-files/-/node-ls-files-0.0.3.tgz#37e1158892521fadfb9cfa7570fb2976d5c9fece"
   integrity sha512-OhZBvqbaSdZmAWAHX5xPHWrGep2Q0XDy6Kt3DY0LSWwEoiImWT41zW1oXwlIbQvJHrb3qO3itZRK0zhogLKPqA==
 
-npm-ez@^1.0.2, npm-ez@latest:
+npm-ez@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/npm-ez/-/npm-ez-1.0.2.tgz#2e085d6096610144885251bf8e86df32879aa0c8"
   integrity sha512-oj8muE4UmXna7HqFROPHSUyaKiSpqOpNsl5jp+DrqYS+gYlwcQ6TEaawm5ryqnjM1hUPAq6BEb/SAxSCXyA5mg==
+  dependencies:
+    ansi-colors "^4.1.3"
+    node-ls-files "^0.0.3"
+    shelljs "^0.8.5"
+
+npm-ez@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/npm-ez/-/npm-ez-1.0.3.tgz#b2c2e48b8965bd0e080235313efa62db53df2d4c"
+  integrity sha512-sapEaUxZ3TPk/IQ/MoqQpVIJnf9KOcyS7kjyFFgqTlYzOHGhdI+ywEMwv6tnjEy1RpkL1PcdhMCdOqrTmyeilg==
   dependencies:
     ansi-colors "^4.1.3"
     node-ls-files "^0.0.3"

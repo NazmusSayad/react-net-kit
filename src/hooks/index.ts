@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from 'react'
-import useSuspenseReact from 'use-suspense-react'
+import { useMemo } from 'react'
 import { RootMethods } from '../creator/createRoot.js'
 import { AxiosMethodsCoreParams, AxiosMethodsKeys } from '../config.js'
 import { CreateAnchor, getLastFunction } from './utils.js'
@@ -9,12 +8,13 @@ import useSuspenseApi, {
   SuspenseApiOnceRequests,
   UseSuspenseApiOnLoadFn,
 } from './useSuspenseApi.js'
+import useSuspense from '../heplers/useSuspense.js'
 
 export default (rootMethods: RootMethods) => {
   return {
     useApi({ suspense = false } = {}) {
       const api = useApiCore(rootMethods)
-      useSuspenseReact(suspense && api.status.loading)
+      useSuspense(suspense && api.status.loading)
       return useMemo(
         () => ({
           ...api.status,
@@ -34,11 +34,7 @@ export default (rootMethods: RootMethods) => {
         | [...AxiosMethodsCoreParams, UseApiOnceOnLoadFn]
     ) {
       const [args, onLoad] = getLastFunction(axiosArgs)
-      const api = useApiOnce(rootMethods, method, args, onLoad)
-      useEffect(() => {
-        api.retry()
-      }, [])
-      return api
+      return useApiOnce(rootMethods, method, args, onLoad)
     },
 
     useSuspenseApiOnce(

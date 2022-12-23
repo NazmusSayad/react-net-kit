@@ -21,13 +21,15 @@ export default (
 
   useEffect(() => {
     delete anchor.response
+    return () => {
+      delete anchor.response
+    }
   }, [])
 
-  if (data.current !== undefined) {
-    return data.current
-  }
+  if (data.current !== undefined) return data.current
+  if (anchor.promise) throw anchor.promise
 
-  throw new Promise((res: any) => {
+  anchor.promise = new Promise((res: any) => {
     const requestPromises = requests.map(([method, ...axiosArgs]) => {
       // @ts-ignore
       return rootMethods[method](...axiosArgs)
@@ -39,6 +41,11 @@ export default (
         anchor.response = parsedData
         onLoad && onLoad(parsedData)
       })
-      .finally(res)
+      .finally(() => {
+        delete anchor.promise
+        res()
+      })
   })
+
+  throw anchor.promise
 }
