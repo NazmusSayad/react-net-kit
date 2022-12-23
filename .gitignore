@@ -2,3 +2,8 @@
 node_modules
 dist-cjs
 dist-mjs
+
+# Added by npm-ez
+node_modules
+dist-cjs
+dist-mjs
