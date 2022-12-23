@@ -2,6 +2,7 @@ export { default } from './ReactApi.js'
 
 export { AxiosMethodsKeys } from './config.js'
 
+export { createAnchor, CreateAnchor } from './hooks/useSuspenseApi.js'
 export { UseApiOnceParams } from './hooks/useApiOnceCore.js'
 export {
   StatusMethods,

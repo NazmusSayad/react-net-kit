@@ -1,6 +1,6 @@
 {
   "name": "use-react-api",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "./dist-cjs/index.js",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",
@@ -14,7 +14,10 @@
     "npm-ez": "^1.0.2",
     "typescript": "latest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "use-suspender": "^1.1.0",
+    "use-suspense-react": "latest"
+  },
   "peerDependencies": {
     "axios": "*",
     "react": "*"

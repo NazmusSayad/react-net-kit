@@ -1,9 +1,6 @@
-import { useMemo } from 'react'
 import axios, { CreateAxiosDefaults } from 'axios'
-import { AxiosMethodsKeys } from './config.js'
 import createRoot, { CreateRootConfig } from './creator/createRoot.js'
-import useApiCore from './hooks/useApiCore.js'
-import useApiOnceCore, { UseApiOnceParams } from './hooks/useApiOnceCore.js'
+import createHooks from './hooks/index.js'
 
 const ReactApi = (
   axiosConfig?: CreateAxiosDefaults,
@@ -11,29 +8,12 @@ const ReactApi = (
 ) => {
   const instance = axios.create(axiosConfig)
   const rootMethods = createRoot(instance, createRootConfig)
+  const hooks = createHooks(rootMethods)
 
   return {
     instance,
     methods: rootMethods,
-
-    useApi() {
-      const api = useApiCore(rootMethods)
-
-      return useMemo(
-        () => ({
-          ...api.status,
-          ...api.methods,
-          status: api.status,
-          setStatus: api.setStatus,
-          methods: api.methods,
-        }),
-        [api.status]
-      )
-    },
-
-    useApiOnce(method: AxiosMethodsKeys, ...args: UseApiOnceParams) {
-      return useApiOnceCore(rootMethods, method, ...args)
-    },
+    ...hooks,
   }
 }
 

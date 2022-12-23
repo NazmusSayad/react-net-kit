@@ -8,7 +8,7 @@ export type ApiCoreConfig = {
   hook?: CreateHookConfig
 }
 
-const useApiCore = (rootMethods: RootMethods, config: ApiCoreConfig = {}) => {
+export default (rootMethods: RootMethods, config: ApiCoreConfig = {}) => {
   const [status, setStatus] = useStatus(config.startAsLoading)
 
   const methods = useMemo(() => {
@@ -17,5 +17,3 @@ const useApiCore = (rootMethods: RootMethods, config: ApiCoreConfig = {}) => {
 
   return useMemo(() => ({ status, setStatus, methods }), [status])
 }
-
-export default useApiCore

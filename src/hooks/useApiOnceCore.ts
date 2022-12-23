@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { AxiosRequestConfig } from 'axios'
 import { AxiosMethodsKeys } from '../config.js'
 import { RootMethods } from '../creator/createRoot.js'
@@ -16,7 +16,7 @@ export type UseApiOnceParams = [
 const useApiOnceCore = (
   coreMethods: RootMethods,
   method: AxiosMethodsKeys,
-  ...args: UseApiOnceParams
+  axiosArgs: UseApiOnceParams
 ) => {
   const api = useApiCore(coreMethods, {
     startAsLoading: true,
@@ -25,17 +25,20 @@ const useApiOnceCore = (
     },
   })
 
-  const runApi = useRef(() => {})
-  runApi.current = () => {
-    const onLoad: any = args[args.length - 1] instanceof Function && args.pop()
+  const retryApiRef = useRef<() => Promise<any>>()
+  retryApiRef.current = async () => {
+    const onLoad: any =
+      axiosArgs[axiosArgs.length - 1] instanceof Function && axiosArgs.pop()
 
     // @ts-ignore
     const axiosFn = api.methods[method.toLowerCase()]
-    axiosFn(...args).then(onLoad)
+    const data = await axiosFn(...axiosArgs)
+    onLoad && onLoad(data)
+    return data
   }
 
-  const retryApi = useCallback(() => runApi.current(), [])
-  useEffect(retryApi, [])
+  // @ts-ignore
+  const retryApi = useCallback(() => retryApiRef.current(), [])
 
   return useMemo(
     () => ({
