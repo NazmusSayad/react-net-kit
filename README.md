@@ -6,7 +6,18 @@ This package makes http request in react easier.
   <img src="https://img.shields.io/npm/v/use-react-api" alt="npm package"> 
 </a>
 
----
+<br/>
+<br/>
+
+## Features
+- `React.Suspense` support!
+- Lightweight
+- Auto and manual request
+- Fully customizable
+- Using axios
+- Multiple instance
+
+<br/>
 
 ## Installation
 
@@ -28,7 +39,9 @@ yarn add use-react-api axios
 pnpm add use-react-api axios
 ```
 
-<br/> <br/>
+<br/>
+
+---
 
 # Setup
 
