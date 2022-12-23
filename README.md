@@ -106,7 +106,7 @@ const Component = () => {
 
 ```js
 ReactApi(AxiosInstanceConfig, ReactApiConfig)
-// { instance, methods, useApi, useApiOnce, useSuspenseApi }
+// { instance, methods, useApi, useApiOnce, createSuspenseApi }
 ```
 
 Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosInstanceConfig`
@@ -169,7 +169,7 @@ This returns:
 
 ```ts
 {
-  instance, methods, useApi, useApiOnce, useSuspenseApi
+  instance, methods, useApi, useApiOnce, createSuspenseApi
 }
 ```
 
