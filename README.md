@@ -92,7 +92,7 @@ const Component = () => {
 
 ```js
 ReactApi(AxiosInstanceConfig, ReactApiConfig)
-// { instance, methods, useApiOnce, useApi }
+// { instance, methods, useApi, useApiOnce, useSuspenseApiOnce }
 ```
 
 Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosInstanceConfig`
@@ -114,9 +114,9 @@ Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosIn
 
 These are middleware. When a request succeed this function is called, After finishing this function `getSuccess` | `getFail` starts. This function can be an `async` function.
 
-### Option `getSuccess`:
+### Option `getSuccess` && getFail:
 
-This gives `AxiosResponse` as first argument and send the returned value. This function can be an `async` function.
+This gives `AxiosResponse` or `AxiosError` as first argument and send the returned value. This function can be an `async` function.
 
 ### Example:
 
@@ -155,7 +155,7 @@ This returns:
 
 ```ts
 {
-  instance, methods, useApiOnce, useApi
+  instance, methods, useApi, useApiOnce, useSuspenseApiOnce
 }
 ```
 
@@ -181,11 +181,40 @@ This is an object:
 ```
 
 All the functions takes axios params,
-check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `[data, error, isOk]`
+check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `[error, data, isOk]`
 
 ### `ReactApi().useApi()`:
 
-This return an Object:
+#### **Usages:**
+
+```js
+import { useState } from 'react'
+import { useApi } from './api.js'
+
+const Component = () => {
+  const [msg, setMsg] = useState()
+
+  // For normal usages
+  const api = useApi()
+
+  // When you don't want to use manually loading component, Just the React.Suspense
+  const api = useApi({ suspense: true })
+
+  const handleClick = async () => {
+    const data = await api.get('https://www.boredapi.com/api/activity')
+    if (!data) return
+    setMsg(data.activity)
+  }
+
+  if (api.error) return <div>{api.error}</div>
+  if (api.loading) return <div>'Loading...'</div>
+  return (
+    <button onClick={handleClick}>{msg ?? 'Click me to get message'}</button>
+  )
+}
+```
+
+The returned value looks like:
 
 ```js
 {
@@ -228,16 +257,35 @@ This return an Object:
 }
 ```
 
-but These returns axios methods the returned value from `getSuccess` when there is no error else returns `undefined`
+These axios methods the returned value from `getSuccess` when there is no error else returns `undefined`
 
 <br />
 
 ### `ReactApi().useApiOnce()`:
 
-This is a function that takes 2-4 arguments.
-The first argument is the method, Key name of `ReactApi().methods`. Then it takes arguments of the function but if you give a functin as the **last argument**, the function will be called with **data as an argument** when api load finished every time.
+```js
+import { useApiOnce } from './api.js'
 
-and returns an Object:
+const Component = () => {
+  // Basic usages
+  const api = useApiOnce('get', 'https://www.boredapi.com/api/activity')
+
+  // With a function
+  const api = useApiOnce(
+    'get',
+    'https://www.boredapi.com/api/activity',
+    (onDataLoad) => {
+      console.log(onDataLoad)
+    }
+  )
+
+  if (api.error) return <div>{api.error}</div>
+  if (api.loading) return <div>'Loading...'</div>
+  return <div>{api.data.activity}</div>
+}
+```
+
+The returned value looks like:
 
 ```js
 {
@@ -264,6 +312,49 @@ and returns an Object:
 
 <br />
 
+### `ReactApi().useSuspenseApiOnce()`:
+
+This uses nearest React.Suspense by default.
+
+```js
+import { createAnchor } from 'use-react-api'
+import { useApiOnce } from './api.js'
+const anchor = createAnchor()
+
+const Component = () => {
+  // Basic usages
+  const api = useSuspenseApiOnce(
+    anchor,
+    ['get', 'https://www.boredapi.com/api/activity'],
+    ['get', 'https://dummyjson.com/products']
+  )
+
+  // With a function
+  const api = useSuspenseApiOnce(
+    anchor,
+    ['get', 'https://www.boredapi.com/api/activity'],
+    ['get', 'https://dummyjson.com/products'],
+    ([bored, dummy]) => {
+      console.log(bored, dummy)
+    }
+  )
+
+  return <div>{api.data[0].activity}</div>
+}
+```
+
+The returned value looks like:
+
+```js
+;[
+  {
+    data: any,
+    error: any,
+    ok: boolean,
+  },
+]
+```
+
 ---
 
 <br/>
@@ -271,22 +362,16 @@ and returns an Object:
 ## Exports
 
 ```js
-// Path: .
-
-export default ReqError
+export default ReactApi
+export { createAnchor }
 
 // Types
 export {
-  AxiosMethodsKeys,
-  UseApiOnceParams,
-  StatusMethods,
-  StatusProps,
-  UseStatusConfig,
-  CreateHookConfig,
-  HookMethods,
-  AnyRootMethod,
-  RootMethods,
   ReactApiConfig,
+  StatusProps,
+  StatusMethods,
+  AvailableMethods,
+  AvailableMethodsString,
 }
 ```
 
