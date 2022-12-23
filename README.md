@@ -127,7 +127,7 @@ Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosIn
 
 These are middleware. When a request succeed this function is called, After finishing this function `getSuccess` | `getFail` starts. This function can be an `async` function.
 
-### Option `getSuccess` && getFail:
+### Option `getSuccess` && `getFail`:
 
 This gives `AxiosResponse` or `AxiosError` as first argument and send the returned value. This function can be an `async` function.
 
@@ -210,7 +210,7 @@ const Component = () => {
   // For normal usages
   const api = useApi()
 
-  // When you don't want to use manually loading component, Just the React.Suspense
+  // When you don't want to use manual loading component, Just the React.Suspense
   const api = useApi({ suspense: true })
 
   const handleClick = async () => {
