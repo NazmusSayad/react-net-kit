@@ -8,7 +8,7 @@ export default (
   store: SuspenseStore,
   requests: SuspenseApiOnceRequests,
   onLoad?: UseSuspenseApiOnLoadFn
-): { error: any; data: any; ok: boolean }[] => {
+): SuspenseApiResponse => {
   const data = useRef(store.response)
 
   useEffect(() => {
@@ -43,13 +43,15 @@ export default (
   throw store.promise
 }
 
+export type SuspenseApiResponse = { error: any; data: any; ok: boolean }[]
+
+export type UseSuspenseApiOnLoadFn = (response: SuspenseApiResponse) => void
+
 export type SuspenseStore = {
   response?: any
   promise?: Promise<any>
   cache?: boolean
 }
-
-export type UseSuspenseApiOnLoadFn = (data: any[]) => void
 
 export type SuspenseApiOnceRequests = [
   AxiosMethodsKeys,
