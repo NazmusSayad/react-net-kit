@@ -378,15 +378,18 @@ api = [
 
 ```js
 export default ReactApi
-export { createAnchor }
 
 // Types
 export {
-  ReactApiConfig,
+  UseApiParams,
+  UseApiOnceParams,
+  UseSuspenseApiParams,
+  CreateSuspenseApiParams,
   StatusProps,
   StatusMethods,
-  AvailableMethods,
   AvailableMethodsString,
+  AvailableMethods,
+  ReactApiConfig,
 }
 ```
 

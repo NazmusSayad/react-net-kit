@@ -1,6 +1,6 @@
 import axios, { CreateAxiosDefaults } from 'axios'
 import createRoot, { CreateRootConfig } from './creator/createRoot.js'
-import createHooks from './hooks/index.js'
+import getHooks from './hooks/index.js'
 
 const ReactApi = (
   axiosConfig?: CreateAxiosDefaults,
@@ -8,7 +8,7 @@ const ReactApi = (
 ) => {
   const instance = axios.create(axiosConfig)
   const rootMethods = createRoot(instance, createRootConfig)
-  const hooks = createHooks(rootMethods)
+  const hooks = getHooks(rootMethods)
 
   return {
     instance,
