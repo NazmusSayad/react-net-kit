@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import useStatus from './useStatus.js'
+import useStatus from '../heplers/useStatus.js'
 import { RootMethods } from '../creator/createRoot.js'
 import createHook, { CreateHookConfig } from '../creator/createHook.js'
 

@@ -335,7 +335,7 @@ This function returns a hook that uses `React.Suspense`.
 ```js
 import { createSuspenseApi } from './api.js'
 const useSuspenseApi = createSuspenseApi()
-const useSuspenseApi2 = createSuspenseApi()
+const useSuspenseApi2 = createSuspenseApi({ cache: true })
 
 const Component = () => {
   // Basic usages
@@ -349,6 +349,7 @@ const Component = () => {
     ['get', 'https://www.boredapi.com/api/activity'],
     ['get', 'https://dummyjson.com/products'],
     ([bored, dummy]) => {
+      // This onLoad function will be called just once when the data loads for the first time
       console.log(bored, dummy)
     }
   )

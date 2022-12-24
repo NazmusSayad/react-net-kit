@@ -1,6 +1,6 @@
 {
   "name": "use-react-api",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "main": "./dist-cjs/index.js",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",

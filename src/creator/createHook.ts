@@ -1,4 +1,4 @@
-import { StatusMethods } from '../hooks/useStatus.js'
+import { StatusMethods } from '../heplers/useStatus.js'
 import { AnyRootMethod, RootMethods } from './createRoot.js'
 import { UseFunctionParams } from '../utils.js'
 

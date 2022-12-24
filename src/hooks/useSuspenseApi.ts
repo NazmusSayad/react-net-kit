@@ -1,28 +1,28 @@
 import { useEffect, useRef } from 'react'
 import { RootMethods } from '../creator/createRoot'
 import { AxiosMethodsCoreParams, AxiosMethodsKeys } from '../config'
-import { anchorSymbol, CreateAnchor, parseResponseList } from './utils'
+import { parseResponseList } from './utils'
 
 export default (
   rootMethods: RootMethods,
-  anchor: CreateAnchor,
+  store: SuspenseStore,
   requests: SuspenseApiOnceRequests,
   onLoad?: UseSuspenseApiOnLoadFn
 ): { error: any; data: any; ok: boolean }[] => {
-  if (anchor.symbol !== anchorSymbol) throw new Error('Invalid anchor input.')
-  const data = useRef(anchor.response)
+  const data = useRef(store.response)
 
   useEffect(() => {
-    delete anchor.response
+    if (store.cache) return
+    delete store.response
     return () => {
-      delete anchor.response
+      delete store.response
     }
   }, [])
 
   if (data.current !== undefined) return data.current
-  if (anchor.promise) throw anchor.promise
+  if (store.promise) throw store.promise
 
-  anchor.promise = new Promise((res: any) => {
+  store.promise = new Promise((res: any) => {
     const requestPromises = requests.map(([method, ...axiosArgs]) => {
       // @ts-ignore
       return rootMethods[method](...axiosArgs)
@@ -31,16 +31,22 @@ export default (
     Promise.all(requestPromises)
       .then((data: any = null) => {
         const parsedData = parseResponseList(data)
-        anchor.response = parsedData
+        store.response = parsedData
         onLoad && onLoad(parsedData)
       })
       .finally(() => {
-        delete anchor.promise
+        delete store.promise
         res()
       })
   })
 
-  throw anchor.promise
+  throw store.promise
+}
+
+export type SuspenseStore = {
+  response?: any
+  promise?: Promise<any>
+  cache?: boolean
 }
 
 export type UseSuspenseApiOnLoadFn = (data: any[]) => void
