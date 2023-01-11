@@ -179,10 +179,10 @@ node-ls-files@^0.0.3:
   resolved "https://registry.yarnpkg.com/node-ls-files/-/node-ls-files-0.0.3.tgz#37e1158892521fadfb9cfa7570fb2976d5c9fece"
   integrity sha512-OhZBvqbaSdZmAWAHX5xPHWrGep2Q0XDy6Kt3DY0LSWwEoiImWT41zW1oXwlIbQvJHrb3qO3itZRK0zhogLKPqA==
 
-npm-ez@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/npm-ez/-/npm-ez-2.0.0.tgz#b156f9315b0337a1aa7581463b9df46277de9498"
-  integrity sha512-uBstL7J3BHmFN+XE5q44eGTnZBR3yzXBuL4DLUJpKVM18vevqriIpXgNp+8pfLfPgrZRLaiHUGlnZEKzkY4ryg==
+npm-ez@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/npm-ez/-/npm-ez-2.0.1.tgz#f289881773de28daefe846b48e87acdb13111bfb"
+  integrity sha512-vgtyoTfovr9qkBZZTu48cCLh/6dFwgDqgKeyIYGtHJW9ITwnEgq4vfEtF1JYXyU8W1WONlcscLdDAJmwckKxsA==
   dependencies:
     "@babel/parser" "^7.20.7"
     ansi-colors "^4.1.3"

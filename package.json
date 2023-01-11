@@ -1,6 +1,6 @@
 {
   "name": "use-react-api",
-  "version": "1.0.15",
+  "version": "1.0.17",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",
     "build": "npm-ez build"
@@ -10,22 +10,22 @@
   "devDependencies": {
     "@types/axios": "latest",
     "@types/react": "latest",
-    "npm-ez": "^2.0.0",
+    "npm-ez": "^2.0.1",
     "typescript": "latest"
   },
   "peerDependencies": {
     "axios": "*",
     "react": "*"
   },
-  "main": "./dist-cjs/index.cjs",
-  "module": "./dist-mjs/index.mjs",
-  "types": "./dist-cjs/index.d.cts",
   "exports": {
     ".": {
       "require": "./dist-cjs/index.cjs",
-      "import": "./dist-mjs/index.mjs"
+      "import": "./dist-mjs/index.mjs",
+      "types": "./dist-cjs/index.d.cts"
     }
   },
+  "main": "./dist-cjs/index.cjs",
+  "module": "./dist-mjs/index.mjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NazmusSayad/use-react-api.git"
