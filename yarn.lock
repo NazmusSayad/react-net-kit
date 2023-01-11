@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@babel/parser@^7.20.7":
+  version "7.20.7"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.20.7.tgz#66fe23b3c8569220817d5feb8b9dcdc95bb4f71b"
+  integrity sha512-T3Z9oHybU+0vZlY9CiDSJQTD5ZapcW18ZctFMi0MOAl/4BjFF4ul7NVSARLdbGO5vDqy9eQiGTV0LtKfvCYvcg==
+
 "@types/axios@latest":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@types/axios/-/axios-0.14.0.tgz#ec2300fbe7d7dddd7eb9d3abf87999964cafce46"
@@ -174,11 +179,12 @@ node-ls-files@^0.0.3:
   resolved "https://registry.yarnpkg.com/node-ls-files/-/node-ls-files-0.0.3.tgz#37e1158892521fadfb9cfa7570fb2976d5c9fece"
   integrity sha512-OhZBvqbaSdZmAWAHX5xPHWrGep2Q0XDy6Kt3DY0LSWwEoiImWT41zW1oXwlIbQvJHrb3qO3itZRK0zhogLKPqA==
 
-npm-ez@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/npm-ez/-/npm-ez-1.0.3.tgz#b2c2e48b8965bd0e080235313efa62db53df2d4c"
-  integrity sha512-sapEaUxZ3TPk/IQ/MoqQpVIJnf9KOcyS7kjyFFgqTlYzOHGhdI+ywEMwv6tnjEy1RpkL1PcdhMCdOqrTmyeilg==
+npm-ez@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/npm-ez/-/npm-ez-2.0.0.tgz#b156f9315b0337a1aa7581463b9df46277de9498"
+  integrity sha512-uBstL7J3BHmFN+XE5q44eGTnZBR3yzXBuL4DLUJpKVM18vevqriIpXgNp+8pfLfPgrZRLaiHUGlnZEKzkY4ryg==
   dependencies:
+    "@babel/parser" "^7.20.7"
     ansi-colors "^4.1.3"
     node-ls-files "^0.0.3"
     shelljs "^0.8.5"
