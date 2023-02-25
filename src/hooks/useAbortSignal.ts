@@ -14,15 +14,17 @@ export default (): AbortSignal => {
     if (done.current) return done.current
     let prevController: AbortController | null
 
-    return {
+    const result = {
       abort() {
-        if (prevController?.signal && !prevController.signal.aborted) {
-          prevController.abort()
-          prevController = null
-          return true
-        }
+        const isActive = Boolean(
+          prevController &&
+            prevController.signal &&
+            prevController.signal.aborted === false
+        )
 
-        return false
+        if (isActive) prevController?.abort()
+        prevController = null
+        return isActive
       },
 
       get isAborted() {
@@ -35,12 +37,16 @@ export default (): AbortSignal => {
       },
 
       get signal() {
+        console.log('New ta created')
         this.abort()
         const controller = new AbortController()
         prevController = controller
         return controller.signal
       },
     }
+
+    done.current = result
+    return result
   }, [])
 
   useEffect(() => {
@@ -49,6 +55,5 @@ export default (): AbortSignal => {
     }
   }, [])
 
-  done.current = abortSignal
   return abortSignal
 }
