@@ -37,7 +37,6 @@ export default (): AbortSignal => {
       },
 
       get signal() {
-        console.log('New ta created')
         this.abort()
         const controller = new AbortController()
         prevController = controller
