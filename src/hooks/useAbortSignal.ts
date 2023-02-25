@@ -12,12 +12,13 @@ export default (): AbortSignal => {
 
   const abortSignal = useMemo(() => {
     if (done.current) return done.current
-    let prevController: AbortController
+    let prevController: AbortController | null
 
     return {
       abort() {
         if (prevController?.signal && !prevController.signal.aborted) {
           prevController.abort()
+          prevController = null
           return true
         }
 
