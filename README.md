@@ -374,13 +374,55 @@ api = [
 
 <br/>
 
+## What about **AbortController**?
+
+I think it will be performence costly if a add it with everything. But there is an option.
+
+```js
+import { useAbortSignal } from 'use-react-api'
+import { useApi } from './api.js'
+
+const Component = () => {
+  const api = useApi()
+  const abort = useAbortSignal()
+
+  const handleSearch = async (e) => {
+    const data = await api.get('/user/search', {
+      signal: abort.signal,
+    })
+  }
+
+  // Here the abort object looks like
+  abort = {
+    abort: Function, // Returns boolean
+    isActive: boolean,
+    isAborted: boolean,
+    signal: new AbortController().signal,
+  }
+
+  // !! Warning...
+  /*
+   * Do not use destructure the returned value from useAbortSignal.
+   * Use this just like refs, I mean useRef
+   */
+
+  // ...
+}
+```
+
+---
+
+<br/>
+
 ## Exports
 
 ```js
 export default ReactApi
 
-// Types
 export {
+  useAbortSignal,
+
+  // Types
   UseApiParams,
   UseApiOnceParams,
   UseSuspenseApiParams,

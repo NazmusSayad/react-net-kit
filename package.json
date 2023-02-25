@@ -1,6 +1,6 @@
 {
   "name": "use-react-api",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",
     "build": "npm-ez build"

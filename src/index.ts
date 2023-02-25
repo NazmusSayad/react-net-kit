@@ -1,13 +1,29 @@
 import ReactApi from './ReactApi.js'
+import useAbortSignal from './hooks/useAbortSignal.js'
 
-export {
+import {
   UseApiParams,
   UseApiOnceParams,
   UseSuspenseApiParams,
   CreateSuspenseApiParams,
 } from './hooks/index.js'
-export { StatusMethods, StatusProps } from './heplers/useStatus.js'
-export { AxiosMethodsKeys as AvailableMethodsString } from './config.js'
-export { HookMethods as AvailableMethods } from './creator/createHook.js'
-export { CreateRootConfig as ReactApiConfig } from './creator/createRoot.js'
+import { StatusMethods, StatusProps } from './heplers/useStatus.js'
+import { AxiosMethodsKeys as AvailableMethodsString } from './config.js'
+import { HookMethods as AvailableMethods } from './creator/createHook.js'
+import { CreateRootConfig as ReactApiConfig } from './creator/createRoot.js'
+
 export default ReactApi
+export {
+  useAbortSignal,
+
+  // Types
+  UseApiParams,
+  UseApiOnceParams,
+  UseSuspenseApiParams,
+  CreateSuspenseApiParams,
+  StatusProps,
+  StatusMethods,
+  AvailableMethodsString,
+  AvailableMethods,
+  ReactApiConfig,
+}
