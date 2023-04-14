@@ -1,6 +1,4 @@
-import axios from 'axios'
-
-export const axiosMethods = [
+export const axiosMethodsKeys = [
   'request',
   'get',
   'delete',
@@ -11,12 +9,16 @@ export const axiosMethods = [
   'patch',
 ] as const
 
-export type AxiosMethodsKeys = typeof axiosMethods[number]
+export const allMethodsKeys = ['requests', ...axiosMethodsKeys] as const
 
-export type AxiosMethodsCore = {
-  [Key in keyof Record<AxiosMethodsKeys, any>]: typeof axios[Key]
+export const defaultConfig = {
+  _getSuccess: () => {},
+  getSuccess: (response: any) => {
+    return response.status === 204 ? true : response.data?.data ?? response.data
+  },
+
+  _getFail: () => {},
+  getFail: (err: any): String | String[] => {
+    return err.response?.data?.message ?? err.message
+  },
 }
-
-export type AxiosMethodsCoreParams = Parameters<AnyAxiosMethodCore>
-
-export type AnyAxiosMethodCore = AxiosMethodsCore[keyof AxiosMethodsCore]

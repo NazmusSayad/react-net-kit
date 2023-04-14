@@ -54,19 +54,22 @@ Configure your application with whatever configuration you want.
 
 ```js
 import ReactApi from 'use-react-api'
+const reactApi = ReactApi()
 
-export default ReactApi()
+export default reactApi
+export const { useApiOnce, useApi, useDataApi, createUseSuspense } =
+  reactApi.hooks
 ```
 
 <br />
 
 `/* Compontnt.js */`
 
-```js
+```ts
 import { useApiOnce } from './api.js'
 
 const Component = () => {
-  const api = useApiOnce('get', 'https://www.boredapi.com/api/activity')
+  const api = useApiOnce({ get: 'https://www.boredapi.com/api/activity' })
 
   if (api.error) return <div>{api.error}</div>
   if (api.loading) return <div>'Loading...'</div>
@@ -74,7 +77,7 @@ const Component = () => {
 }
 ```
 
-```js
+```ts
 import { useState } from 'react'
 import { useApi } from './api.js'
 
@@ -83,9 +86,10 @@ const Component = () => {
   const api = useApi()
 
   const handleClick = async () => {
-    const data = await api.get('https://www.boredapi.com/api/activity')
-    if (!data) return
-    setMsg(data.activity)
+    const { data, ok } = await api.get('https://www.boredapi.com/api/activity')
+    if (ok) {
+      setMsg(data.activity)
+    }
   }
 
   if (api.error) return <div>{api.error}</div>
@@ -169,11 +173,13 @@ This returns:
 
 ```ts
 {
-  instance, methods, useApi, useApiOnce, createSuspenseApi
+  methods: {…},
+  hooks: {…},
+  axiosInstance: ƒ
 }
 ```
 
-### `ReactApi().instance`:
+### `ReactApi().axiosInstance`:
 
 This is just the raw Axios instance
 
@@ -183,6 +189,7 @@ This is an object:
 
 ```ts
 {
+  requests: async Function,
   request: async Function,
   get: async Function,
   delete: async Function,
@@ -197,13 +204,13 @@ This is an object:
 All the functions takes axios params,
 check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `[error, data, isOk]`
 
-### `ReactApi().useApi(config)`:
+### `ReactApi().hooks.useApi(config)`:
 
 #### **Usages:**
 
 ```js
 import { useState } from 'react'
-import { useApi } from './api.js'
+import { useApi, useDataApi } from './api.js'
 
 const Component = () => {
   const [msg, setMsg] = useState()
@@ -214,10 +221,14 @@ const Component = () => {
   // When you don't want to use manual loading component, Just the React.Suspense
   const api = useApi({ suspense: true })
 
+  // If you use this you don't need to set the data to a state. `api.data` will be the data from response
+  const api = useDataApi({ suspense: true })
+
   const handleClick = async () => {
-    const data = await api.get('https://www.boredapi.com/api/activity')
-    if (!data) return
-    setMsg(data.activity)
+    const { data, ok } = await api.get('https://www.boredapi.com/api/activity')
+    if (ok) {
+      setMsg(data.activity)
+    }
   }
 
   if (api.error) return <div>{api.error}</div>
@@ -236,6 +247,7 @@ The returned value looks like:
   data: Boolean,
   error: Boolean,
 
+  requests: async Function,
   request: async Function,
   get: async Function,
   delete: async Function,
@@ -275,21 +287,20 @@ These axios methods the returned value from `getSuccess` when there is no error 
 
 <br />
 
-### `ReactApi().useApiOnce(method, ...axios, onLoad)`:
+### `ReactApi().hooks.useApiOnce(...axios, onLoad)`:
 
 ```js
 import { useApiOnce } from './api.js'
 
 const Component = () => {
   // Basic usages
-  const api = useApiOnce('get', 'https://www.boredapi.com/api/activity')
+  const api = useApiOnce({ get: 'https://www.boredapi.com/api/activity' })
 
   // With a function
   const api = useApiOnce(
-    'get',
-    'https://www.boredapi.com/api/activity',
-    (onDataLoad) => {
-      console.log(onDataLoad)
+    { get: 'https://www.boredapi.com/api/activity' },
+    ([res]) => {
+      console.log(res.data)
     }
   )
 
@@ -304,15 +315,15 @@ The returned value looks like:
 ```js
 {
   loading: Boolean,
-  data: Boolean,
-  error: Boolean,
+  data: T[],
+  error: T[],
 
   retry: Function, // Retry the request
 
   status: {
     loading: Boolean,
-    data: Boolean,
-    error: Boolean,
+    data: T[],
+    error: T[]
   },
 
   setStatus: {
@@ -326,48 +337,36 @@ The returned value looks like:
 
 <br />
 
-### `ReactApi().createSuspenseApi()`:
+### `ReactApi().hooks.createSuspense()`:
 
 This function returns a hook that uses `React.Suspense`.
 
 **!! Warning !!** -- _Do not use this hook multiple times. Create a new hook for each component_
 
 ```js
-import { createSuspenseApi } from './api.js'
-const useSuspenseApi = createSuspenseApi()
-const useSuspenseApi2 = createSuspenseApi({ cache: true })
+import { createSuspense } from './api.js'
+const useSuspenseApi = createSuspense()
+const useSuspenseApi2 = createSuspense({ cache: true })
 
 const Component = () => {
   // Basic usages
-  const api = useSuspenseApi(
-    ['get', 'https://www.boredapi.com/api/activity'],
-    ['get', 'https://dummyjson.com/products']
+  const [bored, dummy] = useSuspenseApi(
+    {url: 'https://www.boredapi.com/api/activity'}
+    {url: 'https://dummyjson.com/products'}
   )
 
   // With a function
   const api2 = useSuspenseApi2(
-    ['get', 'https://www.boredapi.com/api/activity'],
-    ['get', 'https://dummyjson.com/products'],
+    {url: 'https://www.boredapi.com/api/activity'}
+    {url: 'https://dummyjson.com/products'}
     ([bored, dummy]) => {
       // This onLoad function will be called just once when the data loads for the first time
-      console.log(bored, dummy)
+      console.log(bored.data, dummy.data)
     }
   )
 
-  return <div>{api.data[0].activity}</div>
+  return <div>{bored.data.activity}</div>
 }
-```
-
-The returned value of this hook looks like:
-
-```js
-api = [
-  {
-    data: any,
-    error: any,
-    ok: boolean,
-  },
-]
 ```
 
 ---
@@ -379,61 +378,22 @@ api = [
 I think it will be performence costly if a add it with everything. But there is an option.
 
 ```js
-import { useAbortSignal } from 'use-react-api'
+import { useSignal } from 'use-react-api'
 import { useApi } from './api.js'
 
 const Component = () => {
   const api = useApi()
-  const abort = useAbortSignal()
+  const [signal, abort, isActive] = useAbortSignal()
 
   const handleSearch = async (e) => {
-    const data = await api.get('/user/search', {
-      signal: abort.signal,
+    const res = await api.get('/user/search', {
+      signal: signal(),
     })
   }
-
-  // Here the abort object looks like
-  abort = {
-    abort: Function, // Returns boolean
-    isActive: boolean,
-    isAborted: boolean,
-    signal: new AbortController().signal,
-  }
-
-  // !! Warning...
-  /*
-   * Do not use destructure the returned value from useAbortSignal.
-   * Use this just like refs, I mean useRef
-   */
-
-  // ...
 }
 ```
 
 ---
-
-<br/>
-
-## Exports
-
-```js
-export default ReactApi
-
-export {
-  useAbortSignal,
-
-  // Types
-  UseApiParams,
-  UseApiOnceParams,
-  UseSuspenseApiParams,
-  CreateSuspenseApiParams,
-  StatusProps,
-  StatusMethods,
-  AvailableMethodsString,
-  AvailableMethods,
-  ReactApiConfig,
-}
-```
 
 <br/>
 

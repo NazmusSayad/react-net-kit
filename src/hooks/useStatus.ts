@@ -1,54 +1,63 @@
 import { useMemo, useRef, useState } from 'react'
 import { isSame } from '../utils'
 
-const initialStatus: StatusProps = {
+const initialStatus = {
   loading: false,
-  data: undefined,
-  error: undefined,
+  data: undefined as any,
+  error: undefined as any,
 }
 
-const useStatus = (startAsLoading = false): [StatusProps, StatusMethods] => {
+const useStatus = <DataType = any, ErrorType = any>(
+  startAsLoading = false
+): [typeof status, typeof statusMethods] => {
   const [status, setStatus] = useState(() => ({
-    ...initialStatus,
+    ...(initialStatus as {
+      loading: boolean
+      data: DataType
+      error: ErrorType
+    }),
     loading: startAsLoading,
   }))
 
-  // @ts-ignore
-  const statusRef: { current: typeof status } = useRef({})
+  const statusRef = useRef({}) as { current: typeof status }
   Object.assign(statusRef.current, status)
 
   const statusMethods = useMemo(
     () => ({
       loading(loading = true) {
         if (isSame(statusRef.current.loading, loading)) return
-
         setStatus({
           ...initialStatus,
           loading,
         })
       },
 
-      data(data: any) {
+      data(data: DataType) {
         if (isSame(statusRef.current.data, data)) return
-
         setStatus({
           ...initialStatus,
           data,
         })
       },
 
-      error(error: any) {
+      error(error: ErrorType) {
         if (isSame(statusRef.current.error, error)) return
-
         setStatus({
           ...initialStatus,
           error,
         })
       },
 
+      raw(data: DataType, error: ErrorType) {
+        setStatus({
+          ...initialStatus,
+          error,
+          data,
+        })
+      },
+
       reset() {
         if (isSame(statusRef.current, initialStatus)) return
-
         setStatus({
           ...initialStatus,
         })
@@ -61,18 +70,5 @@ const useStatus = (startAsLoading = false): [StatusProps, StatusMethods] => {
 }
 
 export default useStatus
-
-export type UseStatusConfig = Parameters<typeof useStatus>[0]
-
-export type StatusProps = {
-  loading: boolean
-  error: any
-  data: any
-}
-
-export type StatusMethods = {
-  loading: (isLoading?: boolean) => void
-  data: (data: any) => void
-  error: (error: any) => void
-  reset: () => void
-}
+export type DemoStatusProps = ReturnType<typeof useStatus>[0]
+export type DemoStatusMethods = ReturnType<typeof useStatus>[1]

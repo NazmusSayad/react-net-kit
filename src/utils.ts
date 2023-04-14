@@ -1,15 +1,23 @@
-export const runSyncAsync = async (fn: Function | any, ...args: any[]) => {
-  if (!(fn instanceof Function)) return
-
-  const rv = fn(...args)
-  if (rv instanceof Promise) return await rv
-  return rv
-}
+import { CoreResult } from './types'
 
 export const isSame = (a: any, b: any): boolean => {
   return a === b || JSON.stringify(a) === JSON.stringify(b)
 }
 
-export type UseFunctionParams<F extends (...args: any[]) => any, R> = (
-  ...args: Parameters<F>
-) => R
+export const getPramsAndOnLoad = (params: any[]) => {
+  return params.at(-1) instanceof Function
+    ? [params.slice(0, -1), params.at(-1)]
+    : [params]
+}
+
+export const getDataAndErrorList = (responses: CoreResult[]) => {
+  const dataList = []
+  const errorList = []
+
+  for (let res of [...responses]) {
+    dataList.push(res.data)
+    errorList.push(res.error)
+  }
+
+  return [dataList, errorList]
+}

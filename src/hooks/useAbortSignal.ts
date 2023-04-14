@@ -1,58 +1,42 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { MutableRefObject, useEffect, useRef } from 'react'
 
-export interface AbortSignal {
-  abort(): boolean
-  readonly isActive: boolean
-  readonly isAborted: boolean
-  readonly signal: AbortController['signal']
-}
+export default () => {
+  const result = useRef() as MutableRefObject<
+    [
+      signal: () => AbortController['signal'],
+      abortSignal: () => void,
+      isActive: () => boolean
+    ]
+  >
 
-export default (): AbortSignal => {
-  const done = useRef<AbortSignal>()
-
-  const abortSignal = useMemo(() => {
-    if (done.current) return done.current
+  if (!result.current) {
     let prevController: AbortController | null
 
-    const result = {
-      abort() {
-        const isActive = Boolean(
-          prevController &&
-            prevController.signal &&
-            prevController.signal.aborted === false
-        )
-
-        if (isActive) prevController?.abort()
-        prevController = null
-        return isActive
-      },
-
-      get isAborted() {
-        return Boolean(prevController?.signal?.aborted)
-      },
-
-      get isActive() {
-        // @ts-ignore
-        return !this.isAborted
-      },
-
-      get signal() {
-        this.abort()
-        const controller = new AbortController()
-        prevController = controller
-        return controller.signal
-      },
+    const getIsActive = () => {
+      return Boolean(
+        prevController &&
+          prevController.signal &&
+          prevController.signal.aborted === false
+      )
     }
 
-    done.current = result
-    return result
-  }, [])
-
-  useEffect(() => {
-    return () => {
-      abortSignal.abort()
+    const abortSignal = () => {
+      const isActive = getIsActive()
+      if (isActive) prevController?.abort()
+      prevController = null
+      return isActive
     }
-  }, [])
 
-  return abortSignal
+    const generateSignal = () => {
+      abortSignal()
+      const controller = new AbortController()
+      prevController = controller
+      return controller.signal
+    }
+
+    result.current = [generateSignal, abortSignal, getIsActive]
+  }
+
+  useEffect(() => result.current[1], [])
+  return result.current
 }
