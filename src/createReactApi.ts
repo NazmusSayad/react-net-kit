@@ -4,11 +4,11 @@ import createMethods from './createMethods'
 import { ApiConfig } from './types'
 
 const ReactApi = (axiosConfig?: CreateAxiosDefaults, config?: ApiConfig) => {
-  const instance = axios.create(axiosConfig)
-  const methods = createMethods(instance, config ?? {})
+  const axiosInstance = axios.create(axiosConfig)
+  const methods = createMethods(axiosInstance, config ?? {})
   const hooks = createHooks(methods)
 
-  return { instance, methods, hooks }
+  return { axiosInstance, methods, hooks }
 }
 
 export default ReactApi

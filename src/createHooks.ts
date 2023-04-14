@@ -1,10 +1,9 @@
 import {
-  AllMethodsKeys,
-  ExtractData,
-  ExtractError,
-  ListInput,
-  OutputFromListInput,
-  ParamsWithOnLoadFn,
+  CoreRequestsResult,
+  ExtractDataAsList,
+  ExtractErrorAsList,
+  ParamsAndOnLoad,
+  RequestsInput,
   RootMethods,
 } from './types'
 import { getPramsAndOnLoad } from './utils'
@@ -14,35 +13,34 @@ import useSuspenseApi from './core/useSuspenseApi'
 
 export default (rootMethods: RootMethods) => {
   return {
-    useApi<Error>({ suspense = false } = {}) {
-      return useApi<never, Error>(rootMethods, { suspense })
+    useApi<TError>({ suspense = false } = {}) {
+      return useApi<never, TError>(rootMethods, { suspense })
     },
 
-    useApiOnce<Input extends ListInput<M>, M extends AllMethodsKeys>(
-      method: M,
-      ...args: ParamsWithOnLoadFn<M, Input>
-    ) {
-      type TData = M extends 'requests' ? ExtractData<Input> : Input[0]
-      type TError = M extends 'requests' ? ExtractError<Input> : Input[1]
+    useDataApi<TData, TError>({ suspense = false } = {}) {
+      return useApi<TData, TError>(rootMethods, { suspense, useData: true })
+    },
+
+    useApiOnce<T extends RequestsInput[]>(...args: ParamsAndOnLoad<T>) {
+      type TData = ExtractDataAsList<T>
+      type TError = ExtractErrorAsList<T>
 
       const [params, onLoad] = getPramsAndOnLoad(args)
-      return useApiOnce<TData, TError>(rootMethods, method, params, onLoad)
+      return useApiOnce<TData, TError>(rootMethods, params, onLoad)
     },
 
-    createUseSuspense({ cache = false } = {}) {
+    createSuspense({ cache = false } = {}) {
       const store = { cache }
-
-      const suspenseFn: FN = (method, ...args) => {
+      const useSuspense: UseSuspense = (...args) => {
         const [params, onLoad] = getPramsAndOnLoad(args)
-        return useSuspenseApi(store, rootMethods[method], params, onLoad)
+        return useSuspenseApi(store, rootMethods.requests, params, onLoad)
       }
 
-      type FN = <Input extends ListInput<M>, M extends AllMethodsKeys>(
-        method: M,
-        ...args: ParamsWithOnLoadFn<M, Input>
-      ) => OutputFromListInput<M, Input>
+      type UseSuspense = <T extends RequestsInput[]>(
+        ...args: ParamsAndOnLoad<T>
+      ) => CoreRequestsResult<T>
 
-      return suspenseFn
+      return useSuspense
     },
   }
 }

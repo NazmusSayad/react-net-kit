@@ -1,9 +1,9 @@
-import { CoreOutputAny } from '../types'
+import { CoreResult, RootMethods } from '../types'
 import { useEffect, useRef } from 'react'
 
 export default (
   store: any,
-  axiosFn: Function,
+  axiosFn: RootMethods['requests'],
   params: any[],
   onLoad?: Function
 ) => {
@@ -22,7 +22,7 @@ export default (
 
   store.promise = new Promise((resolve: Function) => {
     axiosFn(...params)
-      .then((res: CoreOutputAny | CoreOutputAny[]) => {
+      .then((res: CoreResult | CoreResult[]) => {
         store.response = res
         onLoad && onLoad(store.response)
       })

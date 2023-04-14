@@ -1,13 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import useApi from './useApi'
-import { AllMethodsKeys, RootMethods } from '../types'
+import { RootMethods } from '../types'
 import useEffectOnce from '../hooks/useEffectOnce'
 
 export default <Data, Error>(
   instance: RootMethods,
-  method: AllMethodsKeys,
   params: any[],
-  onLoad: Function
+  onLoad: any
 ) => {
   const api = useApi<Data, Error>(instance, {
     useData: true,
@@ -15,7 +14,7 @@ export default <Data, Error>(
   })
 
   const retryFunction = useCallback(() => {
-    const promise = (api[method] as any)(...params)
+    const promise = api.requests(...params)
     onLoad && promise.then(onLoad)
   }, [])
 

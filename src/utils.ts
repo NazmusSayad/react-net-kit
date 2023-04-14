@@ -1,4 +1,4 @@
-import { CoreOutputAny } from './types'
+import { CoreResult } from './types'
 
 export const isSame = (a: any, b: any): boolean => {
   return a === b || JSON.stringify(a) === JSON.stringify(b)
@@ -10,7 +10,7 @@ export const getPramsAndOnLoad = (params: any[]) => {
     : [params]
 }
 
-export const getDataAndError = (responses: CoreOutputAny[]) => {
+export const getDataAndErrorList = (responses: CoreResult[]) => {
   const dataList = []
   const errorList = []
 

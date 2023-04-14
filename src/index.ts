@@ -1,5 +1,7 @@
 import ReactApi from './createReactApi'
-import useAbortSignal from './hooks/useAbortSignal'
+import useSignal from './hooks/useAbortSignal'
 
-export { useAbortSignal }
+export * from './types'
+
+export { useSignal }
 export default ReactApi

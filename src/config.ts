@@ -9,19 +9,7 @@ export const axiosMethodsKeys = [
   'patch',
 ] as const
 
-export const axiosMethodsKeysUp = [
-  'REQUEST',
-  'GET',
-  'DELETE',
-  'HEAD',
-  'OPTIONS',
-  'POST',
-  'PUT',
-  'PATCH',
-] as const
-
 export const allMethodsKeys = ['requests', ...axiosMethodsKeys] as const
-export const allMethodsKeysUp = ['REQUESTS', ...axiosMethodsKeysUp] as const
 
 export const defaultConfig = {
   _getSuccess: () => {},

@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { allMethodsKeys, axiosMethodsKeys } from './config'
 
 export interface ApiConfig {
@@ -8,156 +8,116 @@ export interface ApiConfig {
   getFail: (err: AxiosError) => void
 }
 
-/* Axios Types */
+/* Root Types */
 export type AxiosMethodsKeys = typeof axiosMethodsKeys[number]
 export type AllMethodsKeys = typeof allMethodsKeys[number]
-
-/* Axios Raw Types */
-export type RawMethods = {
-  [Key in keyof Record<AxiosMethodsKeys, any>]: typeof axios[Key]
-}
-export type AnyRawMethod = RawMethods[keyof RawMethods]
-export type AnyRawMethodParams = Parameters<AnyRawMethod>
+export type RequestsInput = [data: any, error?: any, body?: any]
 
 /* Output Types */
-export interface CoreOutput<TData, TError> {
+export interface CoreResult<TData = any, TError = any> {
   ok: boolean
   data: TData
   error: TError
 }
 
-export type CoreOutputAny<TData = any, TError = any> = CoreOutput<TData, TError>
+/* normal method */
+type MethodSingleResult<T extends RequestsInput> = Promise<
+  CoreResult<
+    UseIfExists<ExtractData<T>, unknown>,
+    UseIfExists<ExtractError<T>, unknown>
+  >
+>
 
-export type CoreRequestsOutput<T extends any[]> = {
-  [I in keyof T]: CoreOutput<T[I][0], T[I][1] extends undefined ? any : T[I][1]>
+/* requests method */
+export type CoreRequestsResult<T extends RequestsInput[]> = {
+  [I in keyof T]: CoreResult<
+    UseIfExists<ExtractData<T[I]>, unknown>,
+    UseIfExists<ExtractError<T[I]>, unknown>
+  >
 }
 
-/* Method return types */
-export type MethodSingleOutput<TData, TError> = Promise<
-  CoreOutput<TData, TError>
+type MethodRequestsResult<T extends RequestsInput[]> = Promise<
+  CoreRequestsResult<T>
 >
-
-export type MethodRequestsOutput<T extends any[]> = Promise<
-  CoreRequestsOutput<T>
->
-
-export type MethodRequestsParams<T extends any[]> = {
-  [I in keyof T]: AxiosRequestConfig<T[I][2]>
+type MethodRequestsParams<T extends RequestsInput[]> = {
+  [I in keyof T]: AxiosRequestConfig<ExtractBody<T[I]>>
 }
 
 /* Axios Wrapper Types */
 export type RootMethods = {
-  requests<Input extends [data: any, error?: any, body?: any][]>(
-    ...args: MethodRequestsParams<Input>
-  ): MethodRequestsOutput<Input>
+  requests<T extends RequestsInput[]>(
+    ...args: MethodRequestsParams<T>
+  ): MethodRequestsResult<T>
 
-  request<Data = any, Error = any, Body = any>(
-    config: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+  request<T extends RequestsInput>(
+    config: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  get<Data = any, Error = any, Body = any>(
+  get<T extends RequestsInput>(
     url: string,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  delete<Data = any, Error = any, Body = any>(
+  delete<T extends RequestsInput>(
     url: string,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  head<Data = any, Error = any, Body = any>(
+  head<T extends RequestsInput>(
     url: string,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  options<Data = any, Error = any, Body = any>(
+  options<T extends RequestsInput>(
     url: string,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  post<Data = any, Error = any, Body = any>(
+  post<T extends RequestsInput>(
     url: string,
-    data?: Body,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    data?: ExtractBody<T>,
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  put<Data = any, Error = any, Body = any>(
+  put<T extends RequestsInput>(
     url: string,
-    data?: Body,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    data?: ExtractBody<T>,
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 
-  patch<Data = any, Error = any, Body = any>(
+  patch<T extends RequestsInput>(
     url: string,
-    data?: Body,
-    config?: AxiosRequestConfig<Body>
-  ): MethodSingleOutput<Data, Error>
+    data?: ExtractBody<T>,
+    config?: AxiosRequestConfig<ExtractBody<T>>
+  ): MethodSingleResult<T>
 }
-
-export type AnyWrappedMethod = RootMethods[keyof RootMethods]
 
 /* UseApiOnce and UseSuspense api helpers */
-type OnLoadFn<TData> = (data: TData) => void
-type ParamsWithOnLoadFnCore<
-  M extends AllMethodsKeys,
-  Data,
-  Body
-> = M extends 'requests'
-  ? AxiosRequestConfig<Body>[] | [...AxiosRequestConfig<Body>[], OnLoadFn<Data>]
-  : M extends 'request'
-  ? [config: AxiosRequestConfig<Body>, onLoad?: OnLoadFn<Data>]
-  : /* 2 */
-  M extends 'get' | 'delete' | 'head' | 'options'
-  ?
-      | [url: string, onLoad?: OnLoadFn<Data>]
-      | [
-          url: string,
-          config?: AxiosRequestConfig<Body>,
-          onLoad?: OnLoadFn<Data>
-        ]
-  : /* 3 */
-  M extends 'post' | 'put' | 'patch'
-  ?
-      | [url: string, onLoad?: OnLoadFn<Data>]
-      | [url: string, data?: Body, onLoad?: OnLoadFn<Data>]
-      | [
-          url: string,
-          data?: Body,
-          config?: AxiosRequestConfig<Body>,
-          onLoad?: OnLoadFn<Data>
-        ]
-  : null
-
-export type ListInput<M> = M extends 'requests'
-  ? [data: any, error?: any][]
-  : [data: any, error?: any]
-
-export type ParamsWithOnLoadFn<
-  M extends AllMethodsKeys,
-  Output extends any[]
-> = ParamsWithOnLoadFnCore<
-  M,
-  M extends 'requests'
-    ? CoreRequestsOutput<Output>
-    : CoreOutput<Output[0], Output[1]>,
-  unknown
->
-
-export type OutputFromListInput<
-  M extends AllMethodsKeys,
-  Input extends any[]
-> = M extends 'requests'
-  ? CoreRequestsOutput<Input>
-  : CoreOutput<Input[0], Input[1]>
-
-export type ExtractData<T extends any[]> = {
-  [I in keyof T]: T[I][0]
+type AxiosRequestsConfig<T extends any[]> = {
+  [I in keyof T]: AxiosRequestConfig<T[I]>
 }
 
-export type ExtractError<T extends any[]> = {
-  [I in keyof T]: T[I][1]
+export type ParamsAndOnLoad<Input extends RequestsInput[]> =
+  | AxiosRequestsConfig<ExtractBodyAsList<Input>>
+  | [
+      ...AxiosRequestsConfig<ExtractBodyAsList<Input>>,
+      (response: CoreRequestsResult<Input>) => void
+    ]
+
+/* Extraction */
+type ExtractData<T extends RequestsInput> = T[0]
+type ExtractError<T extends RequestsInput> = T[1]
+type ExtractBody<T extends RequestsInput> = T[2]
+
+export type ExtractDataAsList<T extends RequestsInput[]> = {
+  [I in keyof T]: ExtractData<T[I]>
+}
+export type ExtractErrorAsList<T extends RequestsInput[]> = {
+  [I in keyof T]: ExtractError<T[I]>
+}
+export type ExtractBodyAsList<T extends RequestsInput[]> = {
+  [I in keyof T]: ExtractBody<T[I]>
 }
 
-export type ExtractBody<T extends any[]> = {
-  [I in keyof T]: T[I][2]
-}
+/* Utils Types */
+type UseIfExists<Target, R = any> = Target extends undefined ? R : Target

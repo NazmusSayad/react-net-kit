@@ -1,5 +1,5 @@
-import { CoreOutputAny, RootMethods } from '../types'
-import { getDataAndError } from '../utils'
+import { CoreResult, RootMethods } from '../types'
+import { getDataAndErrorList } from '../utils'
 import { DemoStatusMethods } from '../hooks/useStatus'
 
 export default (
@@ -9,7 +9,7 @@ export default (
 ) => {
   const result: any = {}
 
-  const handleNormalRequest = (res: CoreOutputAny) => {
+  const handleNormalRequest = (res: CoreResult) => {
     const { data, error, ok } = res
     if (ok) {
       useData ? setStatus.data(data) : setStatus.loading(false)
@@ -19,8 +19,8 @@ export default (
     return res
   }
 
-  const handleRequests = (res: CoreOutputAny[]) => {
-    const [dataList, errorList] = getDataAndError(res)
+  const handleRequests = (res: CoreResult[]) => {
+    const [dataList, errorList] = getDataAndErrorList(res)
     useData ? setStatus.raw(dataList, errorList) : setStatus.error(errorList)
     return [...res]
   }
