@@ -130,11 +130,11 @@ Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosIn
 
 ### Option `_getSuccess` & `_getFail`:
 
-These are middleware. When a request succeed this function is called, After finishing this function `getSuccess` | `getFail` starts. This function can be an `async` function.
+These are middleware. When a request succeed this function is called, After finishing this function `getSuccess` | `getFail` starts.
 
 ### Option `getSuccess` && `getFail`:
 
-This gives `AxiosResponse` or `AxiosError` as first argument and send the returned value. This function can be an `async` function.
+This gives `AxiosResponse` or `AxiosError` as first argument and send the returned value.
 
 ### Example:
 
@@ -202,7 +202,7 @@ This is an object:
 ```
 
 All the functions takes axios params,
-check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `[error, data, isOk]`
+check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `{error, data, ok}`
 
 ### `ReactApi().hooks.useApi(config)`:
 
