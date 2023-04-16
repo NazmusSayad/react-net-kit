@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import useApi from './useApi'
 import { RootMethods } from '../types'
-import useEffectOnce from '../hooks/useEffectOnce'
+import useEffectOnce from '../helpers/useEffectOnce'
 
 export default <Data, Error>(
   instance: RootMethods,

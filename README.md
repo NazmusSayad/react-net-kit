@@ -396,6 +396,61 @@ const Component = () => {
 ---
 
 <br/>
+<br/>
+
+# Wait a min, what about **WebSocket**?
+
+`/* ws.js */`
+
+```js
+import { ReactWs } from 'use-react-api'
+import { io } from 'socket.io-client'
+
+const socket = io('http://localhost:8000')
+
+socket.on('connect', () => {
+  console.log('connected')
+})
+
+export const { useWs, useDataWs } = ReactWs(socket, {
+  checkData(res) {
+    return res.status === 'success'
+  },
+  formatData(res) {
+    return res.data ?? res
+  },
+  formatError(res) {
+    return res.message ?? res
+  },
+})
+```
+
+`/* App.js */`
+
+```js
+import { useWs, useDataWs } from './ws'
+
+const App = () => {
+  const ws = useWs({ suspense: true })
+  const ws = useDataWs({ suspense: true })
+
+  const handleClick = async () => {
+    // this is just like useApi().request but in socket way!
+    const res = await ws.emit('hello')
+    console.log(res)
+  }
+
+  const handleClick = async () => {
+    // this is just like useApi().requests
+    const [res1, res2] = await ws.emitAll('hello')
+    console.log(res1, res2)
+  }
+
+  return <button onClick={handleClick}>Click</button>
+}
+```
+
+<br/>
 
 ---
 

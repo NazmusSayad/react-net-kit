@@ -10,11 +10,13 @@ export const getPramsAndOnLoad = (params: any[]) => {
     : [params]
 }
 
-export const getDataAndErrorList = (responses: CoreResult[]) => {
+export const getDataAndErrorList = (
+  responses: CoreResult[]
+): [dataList: any[], errorList: any[]] => {
   const dataList = []
   const errorList = []
 
-  for (let res of [...responses]) {
+  for (let res of responses) {
     dataList.push(res.data)
     errorList.push(res.error)
   }

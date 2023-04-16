@@ -1,6 +1,6 @@
 import { CoreResult, RootMethods } from '../types'
 import { getDataAndErrorList } from '../utils'
-import { DemoStatusMethods } from '../hooks/useStatus'
+import { DemoStatusMethods } from '../helpers/useStatus'
 
 export default (
   methods: any,

@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
-import useStatus from '../hooks/useStatus'
-import useMemoOnce from '../hooks/useMemoOnce'
+import useStatus from '../helpers/useStatus'
+import useMemoOnce from '../helpers/useMemoOnce'
 import { RootMethods } from '../types'
 import createStatusMethods from './createStatusMethods'
-import useReactSuspense from '../hooks/useSuspense'
+import useSuspense from '../helpers/useSuspense'
 
 export default <Data, Error>(
   instance: RootMethods,
   { useData = false, startLoading = false, suspense = false }
 ) => {
   const [status, setStatus] = useStatus<Data, Error>(startLoading)
-  useReactSuspense(suspense && status.loading)
+  useSuspense(suspense && status.loading)
 
   const methods = useMemoOnce(() =>
     createStatusMethods(instance, setStatus, useData)

@@ -2,10 +2,16 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { allMethodsKeys, axiosMethodsKeys } from './config'
 
 export interface ApiConfig {
-  _getSuccess: (response: AxiosResponse) => any
-  getSuccess: (response: AxiosResponse) => any
-  _getFail: (err: AxiosError) => void
-  getFail: (err: AxiosError) => void
+  _getSuccess(response: AxiosResponse): any
+  getSuccess(response: AxiosResponse): any
+  _getFail(err: AxiosError): void
+  getFail(err: AxiosError): void
+}
+
+export interface WsConfig {
+  checkData(res: unknown): boolean
+  formatData(res: unknown): any
+  formatError(res: unknown): any
 }
 
 /* Root Types */
@@ -21,7 +27,7 @@ export interface CoreResult<TData = any, TError = any> {
 }
 
 /* normal method */
-type MethodSingleResult<T extends RequestsInput> = Promise<
+export type MethodSingleResult<T extends RequestsInput> = Promise<
   CoreResult<
     UseIfExists<ExtractData<T>, unknown>,
     UseIfExists<ExtractError<T>, unknown>
@@ -36,10 +42,10 @@ export type CoreRequestsResult<T extends RequestsInput[]> = {
   >
 }
 
-type MethodRequestsResult<T extends RequestsInput[]> = Promise<
+export type MethodRequestsResult<T extends RequestsInput[]> = Promise<
   CoreRequestsResult<T>
 >
-type MethodRequestsParams<T extends RequestsInput[]> = {
+export type MethodRequestsParams<T extends RequestsInput[]> = {
   [I in keyof T]: AxiosRequestConfig<ExtractBody<T[I]>>
 }
 

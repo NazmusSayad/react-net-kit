@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
 import { ApiConfig, RootMethods } from './types'
-import { axiosMethodsKeys, defaultConfig } from './config'
+import { axiosMethodsKeys, apiDefaultConfig } from './config'
 
 const runAxiosMethod = async (fn: Function, params: any, config: ApiConfig) => {
   try {
@@ -27,7 +27,7 @@ const axiosMethodWrapper = (fn: Function, config: ApiConfig) => {
 }
 
 export default (axios: AxiosInstance, inputConfig: Partial<ApiConfig>) => {
-  const config = { ...defaultConfig, ...inputConfig }
+  const config = { ...apiDefaultConfig, ...inputConfig }
 
   const methods: any = {}
   for (let key in axios) {
