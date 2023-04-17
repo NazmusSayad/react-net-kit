@@ -1,21 +1,22 @@
 {
   "name": "use-react-api",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",
     "build": "npm-ez build"
   },
-  "author": "NazmusSayad",
+  "author": "https://github.com/NazmusSayad",
   "license": "ISC",
   "devDependencies": {
     "@types/axios": "latest",
     "@types/react": "latest",
-    "npm-ez": "^2.0.1",
+    "npm-ez": "^2.0.2",
     "typescript": "latest"
   },
   "peerDependencies": {
     "axios": "*",
-    "react": "*"
+    "react": "*",
+    "socket.io-client": "*"
   },
   "exports": {
     ".": {
@@ -30,7 +31,21 @@
     "type": "git",
     "url": "git+https://github.com/NazmusSayad/use-react-api.git"
   },
-  "keywords": [],
+  "keywords": [
+    "react",
+    "rest",
+    "ws",
+    "api",
+    "websocket",
+    "react-api",
+    "react-query",
+    "useReactApi",
+    "useApi",
+    "useReact",
+    "suspense",
+    "useSuspense",
+    "hook"
+  ],
   "bugs": {
     "url": "https://github.com/NazmusSayad/use-react-api/issues"
   },

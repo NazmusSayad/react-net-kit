@@ -1,6 +1,6 @@
 # use-react-api
 
-This package makes http request in react easier.
+This package makes http/ws request in react easier.
 
 <a href="https://npmjs.com/package/use-react-api">
   <img src="https://img.shields.io/npm/v/use-react-api" alt="npm package"> 
