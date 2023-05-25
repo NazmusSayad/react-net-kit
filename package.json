@@ -1,6 +1,6 @@
 {
   "name": "use-react-api",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",
     "build": "npm-ez build"
@@ -10,6 +10,7 @@
   "devDependencies": {
     "@types/axios": "latest",
     "@types/react": "latest",
+    "@types/socket.io-client": "latest",
     "npm-ez": "^2.0.2",
     "typescript": "latest"
   },
@@ -20,9 +21,20 @@
   },
   "exports": {
     ".": {
-      "require": "./dist-cjs/index.cjs",
       "import": "./dist-mjs/index.mjs",
+      "require": "./dist-cjs/index.cjs",
       "types": "./dist-cjs/index.d.cts"
+    },
+    "./ws": {
+      "require": "./dist-cjs/ws.cjs",
+      "import": "./dist-mjs/ws.mjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "global": [
+        "./dist-cjs/ws.d.cts"
+      ]
     }
   },
   "main": "./dist-cjs/index.cjs",

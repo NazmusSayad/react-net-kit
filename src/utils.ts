@@ -5,8 +5,8 @@ export const isSame = (a: any, b: any): boolean => {
 }
 
 export const getPramsAndOnLoad = (params: any[]) => {
-  return params.at(-1) instanceof Function
-    ? [params.slice(0, -1), params.at(-1)]
+  return params[params.length - 1] instanceof Function
+    ? [params.slice(0, -1), params[params.length - 1]]
     : [params]
 }
 
