@@ -1,6 +1,6 @@
 {
   "name": "use-react-api",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "scripts": {
     "dev": "npm-ez dev --module=mjs",
     "build": "npm-ez build"
@@ -32,7 +32,7 @@
   },
   "typesVersions": {
     "*": {
-      "global": [
+      "ws": [
         "./dist-cjs/ws.d.cts"
       ]
     }
