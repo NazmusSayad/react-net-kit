@@ -11,8 +11,8 @@
     "@types/axios": "latest",
     "@types/react": "latest",
     "@types/socket.io-client": "latest",
-    "npm-ez": "^2.0.2",
-    "typescript": "latest"
+    "npm-ez": "2",
+    "typescript": "4"
   },
   "peerDependencies": {
     "axios": "*",
