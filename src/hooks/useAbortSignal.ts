@@ -1,6 +1,6 @@
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-export default () => {
+export default function () {
   const result = useRef() as MutableRefObject<
     [
       signal: () => AbortController['signal'],

@@ -1,4 +1,7 @@
-export const axiosMethodsKeys = [
+import { HTTPOptionsInternal } from './http/types.t'
+import { WsOptionsInternal } from './ws/types.t'
+
+export const axiosMethodKeys = [
   'request',
   'get',
   'delete',
@@ -9,28 +12,35 @@ export const axiosMethodsKeys = [
   'patch',
 ] as const
 
-export const allMethodsKeys = ['requests', ...axiosMethodsKeys] as const
+export const httpMethodKeys = ['requests', ...axiosMethodKeys] as const
 
-export const apiDefaultConfig = {
-  _getSuccess: () => {},
-  getSuccess: (response: any) => {
-    return response.status === 204 ? true : response.data?.data ?? response.data
+export const httpDefaultConfig: HTTPOptionsInternal = {
+  formatData(res) {
+    return res.data?.data ?? res.data
   },
-
-  _getFail: () => {},
-  getFail: (err: any): String | String[] => {
-    return err.response?.data?.message ?? err.message
+  formatError(err: any) {
+    return (
+      err.response?.data?.error?.message ??
+      err.response?.data?.message ??
+      err.response?.data?.error ??
+      err.message
+    )
   },
 }
 
-export const wsDefaultOptions = {
-  checkData(res: { status: string }) {
-    return res.status ? res.status === 'success' : true
+export const wsDefaultConfig: WsOptionsInternal = {
+  checkData(res) {
+    return Boolean(res)
   },
-  formatData(res: { data: any }) {
-    return res.data ?? res
+  formatData(res) {
+    return res
   },
-  formatError(res: { message: any }) {
-    return res.message ?? res
+  formatError(err: any) {
+    return (
+      err.response?.data?.error?.message ??
+      err.response?.data?.message ??
+      err.response?.data?.error ??
+      err.message
+    )
   },
 }

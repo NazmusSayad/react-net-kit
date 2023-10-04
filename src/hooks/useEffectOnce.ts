@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 
-export default (cb: Function) => {
+export default function (cb: Function) {
   const ref = useRef(false)
   useLayoutEffect(() => {
     if (ref.current) return

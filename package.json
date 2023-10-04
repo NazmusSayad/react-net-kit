@@ -1,24 +1,12 @@
 {
-  "name": "use-react-api",
-  "version": "2.0.5",
+  "name": "react-net-kit",
+  "version": "0.0.2",
   "scripts": {
-    "dev": "npm-ez dev --module=mjs",
-    "build": "npm-ez build"
+    "dev": "jspac dev",
+    "build": "jspac build"
   },
-  "author": "https://github.com/NazmusSayad",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/axios": "latest",
-    "@types/react": "latest",
-    "@types/socket.io-client": "latest",
-    "npm-ez": "2",
-    "typescript": "4"
-  },
-  "peerDependencies": {
-    "axios": "*",
-    "react": "*",
-    "socket.io-client": "*"
-  },
+  "main": "./dist-cjs/index.cjs",
+  "module": "./dist-mjs/index.mjs",
   "exports": {
     ".": {
       "import": "./dist-mjs/index.mjs",
@@ -37,30 +25,16 @@
       ]
     }
   },
-  "main": "./dist-cjs/index.cjs",
-  "module": "./dist-mjs/index.mjs",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NazmusSayad/use-react-api.git"
+  "peerDependencies": {
+    "axios": "*",
+    "react": "*",
+    "socket.io-client": "*"
   },
-  "keywords": [
-    "react",
-    "rest",
-    "ws",
-    "api",
-    "websocket",
-    "react-api",
-    "react-query",
-    "useReactApi",
-    "useApi",
-    "useReact",
-    "suspense",
-    "useSuspense",
-    "hook"
-  ],
-  "bugs": {
-    "url": "https://github.com/NazmusSayad/use-react-api/issues"
-  },
-  "homepage": "https://github.com/NazmusSayad/use-react-api#readme",
-  "description": "This package help you with react http."
+  "devDependencies": {
+    "@types/react": "^18.2.23",
+    "axios": "*",
+    "jspac": "^1.0.0",
+    "socket.io-client": "*",
+    "typescript": "^5.2.2"
+  }
 }

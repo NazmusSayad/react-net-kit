@@ -1,9 +1,9 @@
-import { CoreResult, RootMethods } from '../types'
 import { useEffect, useRef } from 'react'
+import { HTTPCoreResult, HTTPBaseMethods } from '../types.t'
 
-export default (
+export default <Base extends HTTPBaseMethods, T extends any>(
+  fetch: Base['requests'],
   store: any,
-  axiosFn: RootMethods['requests'],
   params: any[],
   onLoad?: Function
 ) => {
@@ -17,14 +17,14 @@ export default (
     }
   }, [])
 
-  if (data.current !== undefined) return data.current
+  if (data.current !== undefined) return data.current as T
   if (store.promise) throw store.promise
 
   store.promise = new Promise((resolve: Function) => {
-    axiosFn(...params)
-      .then((res: CoreResult | CoreResult[]) => {
+    fetch(...params)
+      .then((res: HTTPCoreResult<{}>[]) => {
         store.response = res
-        onLoad && onLoad(store.response)
+        onLoad && onLoad(res)
       })
       .finally(() => {
         delete store.promise

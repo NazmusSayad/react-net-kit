@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "moduleResolution": "node",
+    "lib": ["es2018", "dom"],
+    "target": "es6",
     "skipLibCheck": true,
     "declaration": true,
     "inlineSourceMap": false,
     "strict": true,
     "pretty": true,
-    "removeComments": true
+    "removeComments": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src"]
 }
