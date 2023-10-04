@@ -1,252 +1,171 @@
-# use-react-api
+# react-net-kit
 
-This package makes http/ws request in react easier.
+Simplify HTTP and WebSocket requests in React with this versatile package.
 
-<a href="https://npmjs.com/package/use-react-api">
-  <img src="https://img.shields.io/npm/v/use-react-api" alt="npm package"> 
-</a>
+[![npm package](https://img.shields.io/npm/v/react-net-kit)](https://npmjs.com/package/react-net-kit)
 
-<br/>
-<br/>
+---
 
 ## Features
 
-- `React.Suspense` support!
-- Lightweight
-- Auto and manual request
-- Fully customizable
-- Using axios
-- Multiple instance
+- Seamless `React.Suspense` integration.
+- Lightweight and efficient.
+- Supports both automatic and manual requests.
+- Fully customizable to fit your needs.
+- Powered by Axios for reliable HTTP requests.
+- Manage multiple instances effortlessly.
 
-<br/>
+---
 
 ## Installation
 
-- with npm
+Choose your preferred package manager to get started:
 
-```shell
-npm i use-react-api axios
-```
+### npm
 
-- with yarn
+shellCopy code
 
-```shell
-yarn add use-react-api axios
-```
+`npm i react-net-kit axios`
 
-- with pnpm
+### yarn
 
-```shell
-pnpm add use-react-api axios
-```
+shellCopy code
 
-<br/>
+`yarn add react-net-kit axios`
+
+### pnpm
+
+shellCopy code
+
+`pnpm add react-net-kit axios`
 
 ---
 
 # Setup
 
-Configure your application with whatever configuration you want.
+Configure your application with the desired settings.
 
 ## Basic Usage:
 
-`/* api.js */`
+**api.js**
 
 ```js
-import ReactApi from 'use-react-api'
-const reactApi = ReactApi()
-
-export default reactApi
-export const { useApiOnce, useApi, useDataApi, createUseSuspense } =
-  reactApi.hooks
+import ReactHTTP from 'react-net-kit'
+export const { useApi, useApiOnce, createSuspense } = ReactHTTP()
 ```
 
-<br />
+**Component.js**
 
-`/* Compontnt.js */`
-
-```ts
+```tsx
 import { useApiOnce } from './api.js'
 
 const Component = () => {
   const api = useApiOnce({ get: 'https://www.boredapi.com/api/activity' })
+  const [bored] = api.responses
 
-  if (api.error) return <div>{api.error}</div>
   if (api.loading) return <div>'Loading...'</div>
-  return <div>{api.data.activity}</div>
+  if (bored.error) return <div>{bored.error}</div>
+  return <div>{bored.data.activity}</div>
 }
 ```
 
-```ts
-import { useState } from 'react'
+```tsx
 import { useApi } from './api.js'
 
 const Component = () => {
-  const [msg, setMsg] = useState()
   const api = useApi()
 
   const handleClick = async () => {
     const { data, ok } = await api.get('https://www.boredapi.com/api/activity')
-    if (ok) {
-      setMsg(data.activity)
-    }
+    console.log(data)
   }
 
-  if (api.error) return <div>{api.error}</div>
   if (api.loading) return <div>'Loading...'</div>
+  if (api.response.error) return <div>{api.response.error}</div>
   return (
-    <button onClick={handleClick}>{msg ?? 'Click me to get message'}</button>
+    <button onClick={handleClick}>
+      {api.response.data ?? 'Click me to get a message'}
+    </button>
   )
 }
 ```
 
-<br/>
-
----
-
-<br/>
-
-## Advanced usages of `ReactApi`:
-
-```js
-ReactApi(AxiosInstanceConfig, ReactApiConfig)
-// { instance, methods, useApi, useApiOnce, createSuspenseApi }
-```
-
-Check [Axios instance config](https://axios-http.com/docs/instance) for `AxiosInstanceConfig`
-
-<br />
-
-## `ReactApiConfig` options:
-
-```ts
-{
-  _getSuccess?: (response: AxiosResponse) => any
-  getSuccess?: (response: AxiosResponse) => any
-  _getFail?: (err: AxiosError) => void
-  getFail?: (err: AxiosError) => void
-}
-```
-
-### Option `_getSuccess` & `_getFail`:
-
-These are middleware. When a request succeed this function is called, After finishing this function `getSuccess` | `getFail` starts.
-
-### Option `getSuccess` && `getFail`:
-
-This gives `AxiosResponse` or `AxiosError` as first argument and send the returned value.
-
-### Example:
-
-```js
-ReactApi(
-  {},
-  {
-    _getSuccess: (response) => {
-      console.log('Raw response', response)
-    },
-    getSuccess: (response) => {
-      return response.status === 204
-        ? true
-        : response.data?.data ?? response.data
-    },
-
-    _getFail: (err) => {
-      console.log('Raw error', err)
-    },
-    getFail: (err) => {
-      return err.response?.data?.message ?? err.message
-    },
-  }
-)
-```
-
-<br />
-
----
-
-<br/>
-
-## `ReactApi()` API:
-
-This returns:
-
-```ts
-{
-  methods: {…},
-  hooks: {…},
-  axiosInstance: ƒ
-}
-```
-
-### `ReactApi().axiosInstance`:
-
-This is just the raw Axios instance
-
-### `ReactApi().methods`:
-
-This is an object:
-
-```ts
-{
-  requests: async Function,
-  request: async Function,
-  get: async Function,
-  delete: async Function,
-  head: async Function,
-  options: async Function,
-  post: async Function,
-  put: async Function,
-  patch: async Function,
-}
-```
-
-All the functions takes axios params,
-check [Axios instance config](https://axios-http.com/docs/instance) for more details. And they return `{error, data, ok}`
-
-### `ReactApi().hooks.useApi(config)`:
-
-#### **Usages:**
-
-```js
+```tsx
 import { useState } from 'react'
-import { useApi, useDataApi } from './api.js'
+import { createSuspense } from './api.js'
 
+const useSuspense = createSuspense()
 const Component = () => {
-  const [msg, setMsg] = useState()
-
-  // For normal usages
   const api = useApi()
-
-  // When you don't want to use manual loading component, Just the React.Suspense
-  const api = useApi({ suspense: true })
-
-  // If you use this you don't need to set the data to a state. `api.data` will be the data from response
-  const api = useDataApi({ suspense: true })
 
   const handleClick = async () => {
     const { data, ok } = await api.get('https://www.boredapi.com/api/activity')
-    if (ok) {
-      setMsg(data.activity)
-    }
+    console.log(data)
   }
 
-  if (api.error) return <div>{api.error}</div>
   if (api.loading) return <div>'Loading...'</div>
+  if (api.response.error) return <div>{api.response.error}</div>
   return (
-    <button onClick={handleClick}>{msg ?? 'Click me to get message'}</button>
+    <button onClick={handleClick}>
+      {api.response.data ?? 'Click me to get a message'}
+    </button>
   )
 }
 ```
 
-The returned value looks like:
+---
+
+<br/>
+
+## Advanced Usages of `ReactHTTP`:
 
 ```js
-{
-  loading: Boolean,
-  data: Boolean,
-  error: Boolean,
+ReactHTTP(AxiosInstanceConfig && ReactHTTPConfig)
+```
 
+Check the [Axios instance config](https://axios-http.com/docs/instance) for `AxiosInstanceConfig`.
+
+---
+
+## `ReactHTTPConfig` Options:
+
+```tsx
+{
+  formatData?: (response: AxiosResponse) => formattedData,
+  formatError?: (err: AxiosError) => formattedError,
+}
+```
+
+### Options `formatData` and `formatError`:
+
+These options accept `AxiosResponse` or `AxiosError` as the first argument and return the desired formatted data or error.
+
+#### Example:
+
+```js
+ReactHTTP({
+  formatData: (response) => {
+    return response.status === 204 ? true : response.data?.data ?? response.data
+  },
+
+  formatError: (err) => {
+    return err.response?.data?.message ?? err.message
+  },
+})
+```
+
+---
+
+### `ReactHTTP().axios`:
+
+Access the raw Axios instance.
+
+### `ReactHTTP().methods`:
+
+This object provides various HTTP request methods, all of which return `{error, data, ok}`:
+
+```tsx
+{
   requests: async Function,
   request: async Function,
   get: async Function,
@@ -256,92 +175,66 @@ The returned value looks like:
   post: async Function,
   put: async Function,
   patch: async Function,
-
-  status: {
-    loading: Boolean,
-    data: Boolean,
-    error: Boolean,
-  },
-
-  setStatus: {
-    loading: Function, // Set custom loading status
-    data: Function, // Set custom data status
-    error: Function, // Set custom error status
-    reset: Function // Reset status
-  },
-
-  methods: {
-    request: async Function,
-    get: async Function,
-    delete: async Function,
-    head: async Function,
-    options: async Function,
-    post: async Function,
-    put: async Function,
-    patch: async Function,
-  }
 }
 ```
 
-These axios methods the returned value from `getSuccess` when there is no error else returns `undefined`
+All functions accept Axios parameters; refer to the [Axios instance config](https://axios-http.com/docs/instance) for details.
 
-<br />
+### `ReactHTTP().useApi(config)`:
 
-### `ReactApi().hooks.useApiOnce(...axios, onLoad)`:
+#### Usage Examples:
 
 ```js
-import { useApiOnce } from './api.js'
+import { useApi } from './api.js'
 
 const Component = () => {
-  // Basic usages
-  const api = useApiOnce({ get: 'https://www.boredapi.com/api/activity' })
+  const api = useApi()
 
-  // With a function
-  const api = useApiOnce(
-    { get: 'https://www.boredapi.com/api/activity' },
-    ([res]) => {
-      console.log(res.data)
-    }
-  )
+  const handleClick = async () => {
+    const { data, ok } = await api.get('https://www.boredapi.com/api/activity')
+    console.log(data)
+  }
 
-  if (api.error) return <div>{api.error}</div>
   if (api.loading) return <div>'Loading...'</div>
-  return <div>{api.data.activity}</div>
+  if (api.response.error) return <div>{api.response.error}</div>
+  return (
+    <button onClick={handleClick}>
+      {api.response.data ?? 'Click me to get a message'}
+    </button>
+  )
 }
 ```
 
-The returned value looks like:
+---
+
+### `ReactHTTP().useApiOnce(...axios, onLoad)`:
 
 ```js
-{
-  loading: Boolean,
-  data: T[],
-  error: T[],
+import { useApi } from './api.js'
 
-  retry: Function, // Retry the request
+const Component = () => {
+  const api = useApi()
 
-  status: {
-    loading: Boolean,
-    data: T[],
-    error: T[]
-  },
-
-  setStatus: {
-    loading: Function, // Set custom loading status
-    data: Function, // Set custom data status
-    error: Function, // Set custom error status
-    reset: Function // Reset status
+  const handleClick = async () => {
+    const { data, ok } = await api.get('https://www.boredapi.com/api/activity')
+    console.log(data)
   }
+
+  if (api.loading) return <div>'Loading...'</div>
+  if (api.response.error) return <div>{api.response.error}</div>
+  return (
+    <button onClick={handleClick}>
+      {api.response.data ?? 'Click me to get a message'}
+    </button>
+  )
 }
 ```
 
-<br />
+---
 
-### `ReactApi().hooks.createSuspense()`:
+### `ReactHTTP().createSuspense()`:
 
-This function returns a hook that uses `React.Suspense`.
-
-**!! Warning !!** -- _Do not use this hook multiple times. Create a new hook for each component_
+This function returns a hook that utilizes `React.Suspense`. Please create a new hook for each component to avoid conflicts.
 
 ```js
 import { createSuspense } from './api.js'
@@ -349,18 +242,18 @@ const useSuspenseApi = createSuspense()
 const useSuspenseApi2 = createSuspense({ cache: true })
 
 const Component = () => {
-  // Basic usages
+  // Basic usage
   const [bored, dummy] = useSuspenseApi(
-    {url: 'https://www.boredapi.com/api/activity'}
-    {url: 'https://dummyjson.com/products'}
+    { url: 'https://www.boredapi.com/api/activity' },
+    { url: 'https://dummyjson.com/products' }
   )
 
-  // With a function
+  // With a callback function
   const api2 = useSuspenseApi2(
-    {url: 'https://www.boredapi.com/api/activity'}
-    {url: 'https://dummyjson.com/products'}
+    { url: 'https://www.boredapi.com/api/activity' },
+    { url: 'https://dummyjson.com/products' },
     ([bored, dummy]) => {
-      // This onLoad function will be called just once when the data loads for the first time
+      // This onLoad function is called once when the data loads for the first time
       console.log(bored.data, dummy.data)
     }
   )
@@ -371,14 +264,12 @@ const Component = () => {
 
 ---
 
-<br/>
-
 ## What about **AbortController**?
 
-I think it will be performence costly if a add it with everything. But there is an option.
+While adding `AbortController`, consider the potential performance impact.
 
 ```js
-import { useSignal } from 'use-react-api'
+import { useSignal } from 'react-net-kit'
 import { useApi } from './api.js'
 
 const Component = () => {
@@ -395,15 +286,14 @@ const Component = () => {
 
 ---
 
-<br/>
-<br/>
+<br/> <br/>
 
-# Wait a min, what about **WebSocket**?
+# Wait a minute, what about **WebSocket**?
 
-`/* ws.js */`
+**ws.js**
 
 ```js
-import { ReactWs } from 'use-react-api'
+import ReactWs from 'react-net-kit/ws'
 import { io } from 'socket.io-client'
 
 const socket = io('http://localhost:8000')
@@ -425,24 +315,23 @@ export const { useWs, useDataWs } = ReactWs(socket, {
 })
 ```
 
-`/* App.js */`
+**App.js**
 
 ```js
-import { useWs, useDataWs } from './ws'
+import { useWs } from './ws'
 
 const App = () => {
   const ws = useWs({ suspense: true })
-  const ws = useDataWs({ suspense: true })
 
   const handleClick = async () => {
-    // this is just like useApi().request but in socket way!
-    const res = await ws.emit('hello')
+    // This works similar to useApi().request but for WebSocket!
+    const [res] = await ws.send('hello')
     console.log(res)
   }
 
   const handleClick = async () => {
-    // this is just like useApi().requests
-    const [res1, res2] = await ws.emitAll('hello')
+    // This works similar to useApi().requests
+    const [res1, res2] = await ws.send('hello')
     console.log(res1, res2)
   }
 
@@ -450,8 +339,6 @@ const App = () => {
 }
 ```
 
-<br/>
-
 ---
 
-Made by [Nazmus Sayad](https://github.com/NazmusSayad) with ❤️.
+Made with ❤️ by [Nazmus Sayad](https://github.com/NazmusSayad).

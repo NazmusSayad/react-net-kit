@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-export default (suspended: Boolean = false) => {
+export default function (suspended: Boolean = false) {
   const promise = useRef<any>()
 
   if (suspended && !promise.current) {
