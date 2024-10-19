@@ -11,6 +11,11 @@ import useApi from '../http'
     data: 'BODY',
   })
 
+  if (result.ok) {
+    result.data
+    result.error
+  }
+
   result.data satisfies 'DATA' | undefined
   result.error satisfies 'ERROR' | undefined
 })()

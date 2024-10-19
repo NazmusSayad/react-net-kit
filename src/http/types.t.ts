@@ -15,13 +15,21 @@ export type HTTPOptions = Prettify<
 >
 
 export type HTTPCoreResult<TData, TError> = {
-  ok?: boolean
-  data?: TData
-  error?: TError
-  statusCode?: number
-  response?: AxiosResponse<TData>
+  statusCode: number
+  response: AxiosResponse<TData>
   axiosError?: AxiosError<TData>
-}
+} & (
+  | {
+      ok: true
+      data: TData
+      error?: undefined
+    }
+  | {
+      ok: false
+      error: TError
+      data?: undefined
+    }
+)
 
 export type MultipleRequestConfigInput = [
   TData: unknown,
