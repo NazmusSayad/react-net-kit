@@ -46,43 +46,43 @@ export type HTTPBaseMethods = {
     }
   ): HTTPMethodMultipleResult<TInput>
 
-  request<TData, TError, TBody>(
+  request<TData = unknown, TError = unknown, TBody = unknown>(
     config: AxiosRequestConfig<TBody>
   ): HTTPMethodSingleResult<TData, TError>
 
-  get<TData, TError, TBody>(
+  get<TData = unknown, TError = unknown, TBody = unknown>(
     url: string,
     config?: AxiosRequestConfig<TBody>
   ): HTTPMethodSingleResult<TData, TError>
 
-  delete<TData, TError, TBody>(
+  delete<TData = unknown, TError = unknown, TBody = unknown>(
     url: string,
     config?: AxiosRequestConfig<TBody>
   ): HTTPMethodSingleResult<TData, TError>
 
-  head<TData, TError, TBody>(
+  head<TData = unknown, TError = unknown, TBody = unknown>(
     url: string,
     config?: AxiosRequestConfig<TBody>
   ): HTTPMethodSingleResult<TData, TError>
 
-  options<TData, TError, TBody>(
+  options<TData = unknown, TError = unknown, TBody = unknown>(
     url: string,
     config?: AxiosRequestConfig<TBody>
   ): HTTPMethodSingleResult<TData, TError>
 
-  post<TData, TError, TBody>(
-    url: string,
-    data?: TBody,
-    config?: AxiosRequestConfig<TBody>
-  ): HTTPMethodSingleResult<TData, TError>
-
-  put<TData, TError, TBody>(
+  post<TData = unknown, TError = unknown, TBody = unknown>(
     url: string,
     data?: TBody,
     config?: AxiosRequestConfig<TBody>
   ): HTTPMethodSingleResult<TData, TError>
 
-  patch<TData, TError, TBody>(
+  put<TData = unknown, TError = unknown, TBody = unknown>(
+    url: string,
+    data?: TBody,
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
+
+  patch<TData = unknown, TError = unknown, TBody = unknown>(
     url: string,
     data?: TBody,
     config?: AxiosRequestConfig<TBody>
