@@ -1,27 +1,27 @@
 {
   "name": "react-net-kit",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "scripts": {
-    "dev": "jspac dev",
-    "build": "jspac build"
+    "dev": "npmize dev",
+    "build": "npmize build"
   },
-  "main": "./dist-cjs/index.cjs",
-  "module": "./dist-mjs/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist-mjs/index.mjs",
-      "require": "./dist-cjs/index.cjs",
-      "types": "./dist-cjs/index.d.cts"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.cts"
     },
     "./ws": {
-      "require": "./dist-cjs/ws.cjs",
-      "import": "./dist-mjs/ws.mjs"
+      "require": "./dist/ws.cjs",
+      "import": "./dist/ws.mjs"
     }
   },
   "typesVersions": {
     "*": {
       "ws": [
-        "./dist-cjs/ws.d.cts"
+        "./dist/ws.d.cts"
       ]
     }
   },
@@ -33,8 +33,10 @@
   "devDependencies": {
     "@types/react": "^18.2.23",
     "axios": "*",
-    "jspac": "^1.0.0",
     "socket.io-client": "*",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "npmize": "^1.1.11"
   }
 }

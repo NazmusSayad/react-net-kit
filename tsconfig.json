@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "lib": ["es2018", "dom"],
     "target": "es6",
     "skipLibCheck": true,

@@ -6,7 +6,7 @@ const runAxiosCore = async (
   fn: Function,
   params: any,
   config: HTTPOptionsInternal
-): Promise<HTTPCoreResult<{}>> => {
+): Promise<HTTPCoreResult<unknown, unknown>> => {
   try {
     const res = await fn(...params)
 
@@ -50,10 +50,7 @@ const axiosMultipleRequestWrapper = (
   }
 }
 
-export default <FallBack extends {}>(
-  axios: AxiosInstance,
-  config: HTTPOptionsInternal
-) => {
+export default (axios: AxiosInstance, config: HTTPOptionsInternal) => {
   const methods: any = {}
   for (let key in axios) {
     if (!axiosMethodKeys.includes(key as any)) continue
@@ -63,5 +60,5 @@ export default <FallBack extends {}>(
   }
 
   methods.requests = axiosMultipleRequestWrapper(axios.request, config)
-  return methods as HTTPBaseMethods<FallBack>
+  return methods as HTTPBaseMethods
 }

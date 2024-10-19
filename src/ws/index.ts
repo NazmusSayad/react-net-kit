@@ -13,17 +13,8 @@ export default <O extends Partial<WsOptionsInternal>>(
   socket: Socket,
   options?: O
 ) => {
-  type FallBack = Prettify<
-    (undefined extends O['formatData']
-      ? {}
-      : { data: ReturnType<Exclude<O['formatData'], undefined>> }) &
-      (undefined extends O['formatError']
-        ? {}
-        : { error: ReturnType<Exclude<O['formatError'], undefined>> })
-  >
-
   const conf = { ...(options ?? {}), ...wsDefaultConfig }
-  const methods = createWsMethods<FallBack>(socket, conf)
+  const methods = createWsMethods(socket, conf)
 
   return {
     methods,
@@ -34,7 +25,7 @@ export default <O extends Partial<WsOptionsInternal>>(
       return useWs<
         {
           ok: boolean
-          responses: Awaited<WsExtractMultipleResult<T, FallBack>>
+          responses: Awaited<WsExtractMultipleResult<T>>
         },
         typeof methods
       >(methods, { ...conf, suspense, startAsLoading: false })

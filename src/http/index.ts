@@ -18,15 +18,6 @@ import createBaseMethods from './createMethods'
  * ```
  */
 export default function <O extends HTTPOptions>(options?: O) {
-  type FallBack = Prettify<
-    (undefined extends O['formatData']
-      ? {}
-      : { data: ReturnType<Exclude<O['formatData'], undefined>> }) &
-      (undefined extends O['formatError']
-        ? {}
-        : { error: ReturnType<Exclude<O['formatError'], undefined>> })
-  >
-
   const { formatData, formatError, ...axiosOptions } = {
     ...httpDefaultConfig,
     ...(options ?? {}),
@@ -34,8 +25,8 @@ export default function <O extends HTTPOptions>(options?: O) {
 
   const axiosInstance = axios.create(axiosOptions)
   const baseConfig = { formatData, formatError }
-  const baseMethods = createBaseMethods<FallBack>(axiosInstance, baseConfig)
-  const hooks = createHooks<typeof baseMethods, FallBack>(baseMethods)
+  const baseMethods = createBaseMethods(axiosInstance, baseConfig)
+  const hooks = createHooks<typeof baseMethods>(baseMethods)
 
   return {
     ...hooks,

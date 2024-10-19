@@ -22,7 +22,7 @@ export default <Base extends HTTPBaseMethods, T extends any>(
 
   store.promise = new Promise((resolve: Function) => {
     fetch(...params)
-      .then((res: HTTPCoreResult<{}>[]) => {
+      .then((res: HTTPCoreResult<unknown, unknown>[]) => {
         store.response = res
         onLoad && onLoad(res)
       })

@@ -1,10 +1,7 @@
-import { WsOptionsInternal, WsExtractMultipleResult } from './types.t'
 import { Socket } from 'socket.io-client'
+import { WsOptionsInternal, WsExtractMultipleResult } from './types.t'
 
-export default function <FallBack extends {}>(
-  socket: Socket,
-  options: WsOptionsInternal
-) {
+export default function (socket: Socket, options: WsOptionsInternal) {
   return {
     emit<U extends any[]>(event: string, ...args: U) {
       return socket.emit(event, ...args)
@@ -13,7 +10,7 @@ export default function <FallBack extends {}>(
     send<T extends {}[], U extends any[]>(
       event: string,
       ...args: U
-    ): WsExtractMultipleResult<T, FallBack> {
+    ): WsExtractMultipleResult<T> {
       return new Promise((resolve) => {
         socket.emit(event, ...args, (...rawResponses: unknown[]) => {
           const responses = rawResponses.map((res) => {

@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
 import { MergeObject } from '../types'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 const initialStatus = { loading: false, prev: { loading: false } }
 

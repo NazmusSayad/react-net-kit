@@ -1,4 +1,3 @@
-import { MergeObject } from '../types'
 import createWsMethods from './createWsMethods'
 
 export type WsOptionsInternal = {
@@ -28,11 +27,8 @@ export type WsCoreResult<T extends WsRequestConfig> = {
   error: T['error']
 }
 
-export type WsExtractMultipleResult<
-  T extends WsRequestConfig[],
-  FallBack extends {}
-> = Promise<{
-  [K in keyof T]: WsCoreResult<MergeObject<FallBack, T[K]>>
+export type WsExtractMultipleResult<T extends WsRequestConfig[]> = Promise<{
+  [K in keyof T]: WsCoreResult<T[K]>
 }>
 
 export type WsBaseMethods = ReturnType<typeof createWsMethods>

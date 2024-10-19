@@ -4,7 +4,7 @@ import {
   AxiosRequestConfig,
   CreateAxiosDefaults,
 } from 'axios'
-import { MergeObject, Prettify } from '../types'
+import { Prettify } from '../types'
 
 export type HTTPOptionsInternal = {
   formatData(res: AxiosResponse): unknown
@@ -14,93 +14,90 @@ export type HTTPOptions = Prettify<
   CreateAxiosDefaults & Partial<HTTPOptionsInternal>
 >
 
-// Extract response data
-export type HTTPRequestConfig<D = unknown, E = unknown> = {
-  data?: D
-  error?: E
-  body?: unknown
-}
-export type HTTPCoreResult<T extends HTTPRequestConfig> = {
+export type HTTPCoreResult<TData, TError> = {
   ok?: boolean
+  data?: TData
+  error?: TError
   statusCode?: number
-  response?: AxiosResponse<T['data']>
-  data?: T['data']
-  error?: T['error']
-  axiosError?: AxiosError<T['data']>
+  response?: AxiosResponse<TData>
+  axiosError?: AxiosError<TData>
 }
 
-export type HTTPMethodSingleResult<
-  T extends HTTPRequestConfig,
-  F extends {}
-> = Promise<HTTPCoreResult<MergeObject<F, T>>>
+export type MultipleRequestConfigInput = [
+  TData: unknown,
+  TError?: unknown,
+  TBody?: unknown
+]
+
+export type HTTPMethodSingleResult<TData, TError> = Promise<
+  HTTPCoreResult<TData, TError>
+>
 
 export type HTTPMethodMultipleResult<
-  T extends HTTPRequestConfig[],
-  F extends {}
+  TInput extends MultipleRequestConfigInput[]
 > = Promise<{
-  [I in keyof T]: HTTPCoreResult<MergeObject<F, T[I]>>
+  [I in keyof TInput]: HTTPCoreResult<TInput[I][0], TInput[I][1]>
 }>
 
-type ExtractBody<T> = 'body' extends keyof T ? T['body'] : unknown
+export type HTTPBaseMethods = {
+  requests<TInput extends MultipleRequestConfigInput[]>(
+    ...args: {
+      [I in keyof TInput]: AxiosRequestConfig<TInput[I][2]>
+    }
+  ): HTTPMethodMultipleResult<TInput>
 
-export type HTTPBaseMethods<FallBack extends {} = {}> = {
-  requests<T extends {}[]>(
-    ...args: AxiosMultipleRequestParam<T>
-  ): HTTPMethodMultipleResult<T, FallBack>
+  request<TData, TError, TBody>(
+    config: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  request<T extends {}>(
-    config: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
-
-  get<T extends {}>(
+  get<TData, TError, TBody>(
     url: string,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  delete<T extends {}>(
+  delete<TData, TError, TBody>(
     url: string,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  head<T extends {}>(
+  head<TData, TError, TBody>(
     url: string,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  options<T extends {}>(
+  options<TData, TError, TBody>(
     url: string,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  post<T extends {}>(
+  post<TData, TError, TBody>(
     url: string,
-    data?: ExtractBody<T>,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    data?: TBody,
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  put<T extends {}>(
+  put<TData, TError, TBody>(
     url: string,
-    data?: ExtractBody<T>,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    data?: TBody,
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 
-  patch<T extends {}>(
+  patch<TData, TError, TBody>(
     url: string,
-    data?: ExtractBody<T>,
-    config?: AxiosSingleRequestParam<T>
-  ): HTTPMethodSingleResult<T, FallBack>
+    data?: TBody,
+    config?: AxiosRequestConfig<TBody>
+  ): HTTPMethodSingleResult<TData, TError>
 }
 
-export type AxiosSingleRequestParam<T extends HTTPRequestConfig> =
-  AxiosRequestConfig<T['body']>
-
-export type AxiosMultipleRequestParam<T extends HTTPRequestConfig[]> = {
-  [I in keyof T]: AxiosRequestConfig<T[I]['body']>
+export type AxiosMultipleRequestParam<
+  TInput extends MultipleRequestConfigInput[]
+> = {
+  [I in keyof TInput]: AxiosRequestConfig<TInput[I][2]>
 }
 
-export type AxiosRequestsConfig<T extends any[], F extends {}> =
+export type AxiosRequestsConfig<T extends any[]> =
   | AxiosMultipleRequestParam<T>
   | [
       ...AxiosMultipleRequestParam<T>,
-      (responses: Awaited<HTTPMethodMultipleResult<T, F>>) => void
+      (responses: Awaited<HTTPMethodMultipleResult<T>>) => void
     ]
