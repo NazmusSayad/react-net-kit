@@ -50,8 +50,8 @@ Configure your application with the desired settings.
 **api.js**
 
 ```js
-import ReactHTTP from 'react-net-kit'
-export const { useApi, useApiOnce, createSuspense } = ReactHTTP()
+import ReactNetKit from 'react-net-kit'
+export const { useApi, useApiOnce, createSuspense } = ReactNetKit()
 ```
 
 **Component.js**
@@ -117,17 +117,17 @@ const Component = () => {
 
 <br/>
 
-## Advanced Usages of `ReactHTTP`:
+## Advanced Usages of `ReactNetKit`:
 
 ```js
-ReactHTTP(AxiosInstanceConfig && ReactHTTPConfig)
+ReactNetKit(AxiosInstanceConfig && ReactNetKitConfig)
 ```
 
 Check the [Axios instance config](https://axios-http.com/docs/instance) for `AxiosInstanceConfig`.
 
 ---
 
-## `ReactHTTPConfig` Options:
+## `ReactNetKitConfig` Options:
 
 ```tsx
 {
@@ -143,7 +143,7 @@ These options accept `AxiosResponse` or `AxiosError` as the first argument and r
 #### Example:
 
 ```js
-ReactHTTP({
+ReactNetKit({
   formatData: (response) => {
     return response.status === 204 ? true : response.data?.data ?? response.data
   },
@@ -156,11 +156,11 @@ ReactHTTP({
 
 ---
 
-### `ReactHTTP().axios`:
+### `ReactNetKit().axios`:
 
 Access the raw Axios instance.
 
-### `ReactHTTP().methods`:
+### `ReactNetKit().methods`:
 
 This object provides various HTTP request methods, all of which return `{error, data, ok}`:
 
@@ -180,7 +180,7 @@ This object provides various HTTP request methods, all of which return `{error, 
 
 All functions accept Axios parameters; refer to the [Axios instance config](https://axios-http.com/docs/instance) for details.
 
-### `ReactHTTP().useApi(config)`:
+### `ReactNetKit().useApi(config)`:
 
 #### Usage Examples:
 
@@ -207,7 +207,7 @@ const Component = () => {
 
 ---
 
-### `ReactHTTP().useApiOnce(...axios, onLoad)`:
+### `ReactNetKit().useApiOnce(...axios, onLoad)`:
 
 ```js
 import { useApi } from './api.js'
@@ -232,7 +232,7 @@ const Component = () => {
 
 ---
 
-### `ReactHTTP().createSuspense()`:
+### `ReactNetKit().createSuspense()`:
 
 This function returns a hook that utilizes `React.Suspense`. Please create a new hook for each component to avoid conflicts.
 

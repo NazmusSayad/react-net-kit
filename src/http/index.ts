@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { Prettify } from '../types'
 import createHooks from './createHooks'
 import { HTTPOptions } from './types.t'
 import { httpDefaultConfig } from '../config'
@@ -13,8 +12,8 @@ import createBaseMethods from './createMethods'
  * ## Basic usage
  *
  * ```ts
- * import ReactHTTP from 'react-net-kit'
- * export const { useApi, useApiOnce, createSuspense } = ReactHTTP()
+ * import ReactNetKit from 'react-net-kit'
+ * export const { useApi, useApiOnce, createSuspense } = ReactNetKit()
  * ```
  */
 export default function <O extends HTTPOptions>(options?: O) {

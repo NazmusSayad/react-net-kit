@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "./dist",
     "lib": ["es2018", "dom"],
     "target": "es6",
     "skipLibCheck": true,
@@ -10,7 +10,9 @@
     "pretty": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "allowUmdGlobalAccess": true
   },
-  "include": ["src"]
+  "include": ["./src"]
 }

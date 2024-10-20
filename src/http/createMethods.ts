@@ -23,7 +23,7 @@ const runAxiosCore = async (
     return {
       ok: false,
       axiosError: error,
-      statusCode: error.response!.status,
+      statusCode: error.response?.status,
       response: error.response!,
       error: config.formatError(error),
       data: undefined,

@@ -15,18 +15,54 @@ export type HTTPOptions = Prettify<
 >
 
 export type HTTPCoreResult<TData, TError> = {
-  statusCode: number
+  /**
+   * The response object from axios
+   */
   response: AxiosResponse<TData>
+
+  /**
+   * The status code of the response
+   * Will be undefined if the request canceled by abort signal
+   */
+  statusCode?: number
+
+  /**
+   * The error object if the request failed or canceled from axios
+   */
   axiosError?: AxiosError<TData>
 } & (
   | {
+      /**
+       * This will be `true` if the request success.
+       *
+       */
       ok: true
+
+      /**
+       * ✅ - The data object after the request success.
+       *
+       */
       data: TData
+
+      /**
+       * ❌ - The error object if the request failed (In this case: `undefined`).
+       */
       error?: undefined
     }
   | {
+      /**
+       * This will be `false` if the request failed.
+       */
       ok: false
+
+      /**
+       * ✅ - The error object after the request failed.
+       */
       error: TError
+
+      /**
+       * ❌ - The data object if the request success (In this case: `undefined`).
+       */
       data?: undefined
     }
 )

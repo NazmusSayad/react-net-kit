@@ -1,12 +1,11 @@
-import useAbortSignal from './hooks/useAbortSignal'
-import useEffectOnce from './hooks/useEffectOnce'
-import useMemoOnce from './hooks/useMemoOnce'
+import ReactNetKit from './http'
 import useStatus from './hooks/useStatus'
+import useMemoOnce from './hooks/useMemoOnce'
 import useSuspense from './hooks/useSuspense'
-import ReactHTTP from './http'
+import useEffectOnce from './hooks/useEffectOnce'
+import useAbortSignal from './hooks/useAbortSignal'
 
-export { ReactHTTP }
-export default ReactHTTP
-
+export { ReactNetKit }
+export default ReactNetKit
 export * from './http/types.t'
 export { useAbortSignal, useEffectOnce, useMemoOnce, useStatus, useSuspense }

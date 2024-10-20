@@ -1,5 +1,5 @@
-import ReactWs from './ws/index'
+import ReactWsKit from './ws/index'
 
-export { ReactWs }
-export default ReactWs
+export { ReactWsKit }
+export default ReactWsKit
 export * from './ws/types.t'

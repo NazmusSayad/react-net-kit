@@ -7,7 +7,6 @@ import useWs from './core/useWsStatus'
 import { Socket } from 'socket.io-client'
 import { wsDefaultConfig } from '../config'
 import createWsMethods from './createWsMethods'
-import { Prettify } from '../types'
 
 export default <O extends Partial<WsOptionsInternal>>(
   socket: Socket,
